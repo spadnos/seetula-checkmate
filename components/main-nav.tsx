@@ -6,11 +6,11 @@ import { cn } from "@/lib/utils";
 import CustomLink from "./custom-link";
 import {
   NavigationMenu,
-  NavigationMenuContent,
+  // NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
+  // NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
 import React from "react";
@@ -32,7 +32,7 @@ export function MainNav() {
       </CustomLink>
       <NavigationMenu>
         <NavigationMenuList>
-          <NavigationMenuItem>
+          {/* <NavigationMenuItem>
             <NavigationMenuTrigger className="px-2">
               Server Side
             </NavigationMenuTrigger>
@@ -57,7 +57,7 @@ export function MainNav() {
             >
               Client Side
             </NavigationMenuLink>
-          </NavigationMenuItem>
+          </NavigationMenuItem> */}
           <NavigationMenuItem>
             <NavigationMenuLink
               href="/about"
