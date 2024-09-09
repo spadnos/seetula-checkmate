@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "SeetulaChecklists",
+  name: "CheckMate",
   description: "Yet another checklist app.",
   navItems: [
     {

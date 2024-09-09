@@ -4,13 +4,11 @@ import DarkMode from "./navbar/dark-mode";
 
 export default function Header() {
   return (
-    <header className="sticky w-full flex justify-center border-b max-w-7xl">
-      <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
-        <MainNav />
-        <div className="flex space-x-4">
-          <DarkMode />
-          <UserButton />
-        </div>
+    <header className="px-4 lg:px-6 h-14 flex justify-between items-center bg-white dark:bg-gray-800 shadow-sm">
+      <MainNav />
+      <div className="flex space-x-4">
+        <DarkMode />
+        <UserButton />
       </div>
     </header>
   );

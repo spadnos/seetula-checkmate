@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import { cn } from "@/lib/utils";
 import CustomLink from "./custom-link";
 import {
@@ -15,19 +13,67 @@ import {
 } from "./ui/navigation-menu";
 import React from "react";
 import { Button } from "./ui/button";
+import Logo from "./seetula/logo";
+import { useSession } from "next-auth/react";
 
+const NAVLINKS = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+    requiresAuth: true,
+    hidden: false,
+  },
+  {
+    label: "Checklists",
+    href: "/checklists",
+    requiresAuth: true,
+    hidden: false,
+  },
+  {
+    label: "Polls",
+    href: "/polls",
+    requiresAuth: true,
+    hidden: true,
+  },
+  {
+    label: "About",
+    href: "/about",
+    requiresAuth: false,
+    hidden: false,
+  },
+];
+
+function MenuItem({
+  label,
+  href,
+  requiresAuth,
+  hidden,
+}: {
+  label: string;
+  href: string;
+  requiresAuth: boolean;
+  hidden: boolean;
+}) {
+  const session = useSession();
+
+  if (hidden || (requiresAuth && !session.data)) {
+    return null;
+  }
+
+  return (
+    <NavigationMenuItem>
+      <NavigationMenuLink href={href} className={navigationMenuTriggerStyle()}>
+        {label}
+      </NavigationMenuLink>
+    </NavigationMenuItem>
+  );
+}
 export function MainNav() {
   return (
     <div className="flex items-center gap-4">
       <CustomLink href="/">
         <Button variant="ghost" className="p-0">
-          <Image
-            src="/logo.png"
-            alt="Home"
-            width="32"
-            height="32"
-            className="min-w-8"
-          />
+          <Logo name="checklists" />
         </Button>
       </CustomLink>
       <NavigationMenu>
@@ -58,7 +104,7 @@ export function MainNav() {
               Client Side
             </NavigationMenuLink>
           </NavigationMenuItem> */}
-          <NavigationMenuItem>
+          {/* <NavigationMenuItem>
             <NavigationMenuLink
               href="/about"
               className={navigationMenuTriggerStyle()}
@@ -73,7 +119,10 @@ export function MainNav() {
             >
               Dashboard
             </NavigationMenuLink>
-          </NavigationMenuItem>
+          </NavigationMenuItem> */}
+          {NAVLINKS.map((item, index) => {
+            return <MenuItem key={index} {...item} />;
+          })}
         </NavigationMenuList>
       </NavigationMenu>
     </div>

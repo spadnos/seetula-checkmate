@@ -18,7 +18,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: siteConfig.name,
+  title: "Seetula" + siteConfig.name,
   description: siteConfig.description,
 };
 
@@ -33,9 +33,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <div className="flex flex-col items-center h-screen">
+          <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
             <Header />
-            <main className="pt-8 flex-grow">{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
           </div>
         </Providers>
