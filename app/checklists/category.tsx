@@ -1,18 +1,13 @@
 "use client";
 
-import { createRef, useEffect, useState } from "react";
-import {
-  SortableContext,
-  rectSortingStrategy,
-  useSortable,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { createRef, useState } from "react";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { Input } from "@/components/ui/input";
 
 import { CategoryType, Id, ItemType } from "./types";
 
 import ListItem from "./list-item";
-import { LuTrash2 } from "react-icons/lu";
+import { Trash } from "lucide-react";
 
 type props = {
   category: CategoryType;
@@ -20,9 +15,8 @@ type props = {
   addNewItem: (itemName: string, categoryId: Id) => void;
   updateCheckStatus: (item: string) => void;
   handleDeleteItem: (id: string) => void;
-  handleUpdateItem: (id: Id, data: {}) => void;
+  handleUpdateItem: (id: Id, data: object) => void;
   handleRemoveCategory: (title: string) => void;
-  updateCategoryTitle: (categoryId: string, title: string) => void;
 };
 
 export default function Category({
@@ -33,23 +27,21 @@ export default function Category({
   handleDeleteItem,
   handleUpdateItem,
   handleRemoveCategory,
-  updateCategoryTitle,
 }: props) {
-  const { setNodeRef, attributes, listeners, transform, transition } =
-    useSortable({
-      id: category.id,
-      data: {
-        type: "Category",
-        category,
-      },
-    });
+  const { setNodeRef, attributes, listeners } = useSortable({
+    id: category.id,
+    data: {
+      type: "Category",
+      category,
+    },
+  });
   const [editTitle, setEditTitle] = useState<boolean>(false);
-  const [categoryTitle, setCategoryTitle] = useState(category.title);
+  // const [categoryTitle, setCategoryTitle] = useState(category.title);
 
   const ref = createRef<HTMLFormElement>();
 
   async function handleNewItem(formData: FormData) {
-    const formFields = Object.fromEntries(formData);
+    // const formFields = Object.fromEntries(formData);
     addNewItem(formData.get("name")?.toString() || "", category.id);
 
     // reset the form
@@ -77,14 +69,14 @@ export default function Category({
         {editTitle && (
           <form>
             <input
-              defaultValue={categoryTitle}
+              defaultValue={category.title}
               className="px-2"
               autoFocus
               onBlur={() => setEditTitle(false)}
             />
           </form>
         )}
-        <LuTrash2
+        <Trash
           className="hover:stroke-red-400"
           onClick={() => handleRemoveCategory(category.id)}
         />
@@ -92,7 +84,7 @@ export default function Category({
 
       <div className="flex flex-col min-h-16 " ref={setNodeRef}>
         <SortableContext items={notCompleted}>
-          {notCompleted.map((item: any) => (
+          {notCompleted.map((item: ItemType) => (
             <ListItem
               key={item.id}
               item={item}
@@ -115,7 +107,7 @@ export default function Category({
             {completed.length} of {items.length}
           </span>
         </div>
-        {completed.map((item: any, index: number) => (
+        {completed.map((item: ItemType) => (
           // <div key={index}>{item.name}</div>
 
           <ListItem

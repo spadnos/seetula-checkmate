@@ -3,13 +3,14 @@ import { CSS } from "@dnd-kit/utilities";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import {
-  LuPencil,
-  LuTrash2,
-  LuMessageSquare,
-  LuLock,
-  LuUnlock,
-} from "react-icons/lu";
+// import {
+//   LuPencil,
+//   LuTrash2,
+//   LuMessageSquare,
+// } from "react-icons/lu";
+import { Pencil } from "lucide-react";
+import { Trash } from "lucide-react";
+import { MessageCircle as Message } from "lucide-react";
 import { Id, ItemType } from "./types";
 
 export default function ListItem({
@@ -21,7 +22,7 @@ export default function ListItem({
   item: ItemType;
   toggleCompleted: (id: Id) => void;
   handleDeleteItem: (id: Id) => void;
-  handleUpdateItem: (id: Id, data: {}) => void;
+  handleUpdateItem: (id: Id, data: object) => void;
 }) {
   const [editMode, setEditMode] = useState(false);
   const { setNodeRef, attributes, listeners, transform, transition } =
@@ -38,9 +39,9 @@ export default function ListItem({
     transition,
   };
 
-  function togglePrivate() {
-    handleUpdateItem(item.id, { private: !item.private });
-  }
+  // function togglePrivate() {
+  //   handleUpdateItem(item.id, { private: !item.private });
+  // }
 
   function handleSubmit(formData: FormData) {
     const formFields = Object.fromEntries(formData);
@@ -101,9 +102,14 @@ export default function ListItem({
 
       <div className="flex gap-2">
         <div className="flex gap-2 group-hover:visible">
-          <LuMessageSquare />
-          <LuPencil className="hover:stroke-1" onClick={toggleEditMode} />
-          <LuTrash2
+          <Message size={20} />
+          <Pencil
+            size={20}
+            className="hover:stroke-1"
+            onClick={toggleEditMode}
+          />
+          <Trash
+            size={20}
             className="hover:stroke-1 hover:stroke-red-500"
             onClick={() => handleDeleteItem(item.id)}
           />

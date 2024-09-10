@@ -4,7 +4,7 @@ import { createRef, useState } from "react";
 
 // import { LuPencil, LuTrash } from "react-icons/lu";
 import { Pencil1Icon as PencilIcon, TrashIcon } from "@radix-ui/react-icons";
-import { createItem, deleteList, updateListItem } from "@/lib/checklist";
+import { deleteList } from "@/lib/checklist";
 import { useRouter } from "next/navigation";
 import NewList from "./new-list";
 import ListModal from "./list-modal";
@@ -12,6 +12,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
 import { Prisma } from "@prisma/client";
+
+// interface ChecklistType {
+//   id: string;
+//   title: string;
+//   user: object;
+//   items: object[],
+
+// }
 
 export default function ListCard({
   list,
@@ -25,11 +33,6 @@ export default function ListCard({
     await deleteList(list.id);
 
     router.refresh();
-  }
-
-  async function handleListEdit() {
-    // consdier doing this with a route param instead
-    setShowListEdit(true);
   }
 
   function closeListModal() {

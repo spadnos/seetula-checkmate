@@ -10,11 +10,9 @@ import {
   deleteItem,
   addCategoryToChecklist,
   updateCategory,
-  removeCategoryFromChecklist,
-  updateChecklist,
-} from "@/app/lib/checklist";
+  // removeCategoryFromChecklist,
+} from "@/lib/checklist";
 import {
-  closestCorners,
   DndContext,
   PointerSensor,
   useSensor,
@@ -22,19 +20,13 @@ import {
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
-  DragOverlay,
 } from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
+import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import Category from "../category";
 import { Input } from "@/components/ui/input";
 import { CategoryType, Id, ItemType } from "../types";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
-import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
 
 function sortItems(items: ItemType[], order: string): ItemType[] {
   // console.log("order = ", order.split(","));
@@ -108,10 +100,10 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
       });
       return;
     }
-    const newChecklist = await removeCategoryFromChecklist(
-      checklist.id,
-      categoryId
-    );
+    // const newChecklist = await removeCategoryFromChecklist(
+    //   checklist.id,
+    //   categoryId
+    // );
     setCategories(categories.filter((category) => category.id !== categoryId));
   }
 
@@ -135,7 +127,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     await deleteItem(itemId);
   }
 
-  async function handleUpdateItem(id: Id, data: {}) {
+  async function handleUpdateItem(id: Id, data: object) {
     await updateListItem(id, data);
     const newItems = items.map((item) => {
       if (item.id === id) {
@@ -157,7 +149,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     // update the db
     // const result = await updateChecklist(list.id, newItems);
     if (item) {
-      const result = await toggleItemComplete(item.id);
+      await toggleItemComplete(item.id);
     }
 
     // update the component state
@@ -289,7 +281,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     if (!isActiveTask) return;
 
     // Dragging over annother item
-    let overCatId: any = null;
+    let overCatId: string | number | null = null;
     if (isActiveTask && isOverTask) {
       const activeIndex = items.findIndex((item) => item.id === activeId);
       const overIndex = items.findIndex((item) => item.id === overId);
@@ -314,7 +306,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
         return arrayMove(items, activeIndex, activeIndex);
       });
     }
-    const newCategory = categories.find((cat) => cat.id === overCatId)?.title;
+    // const newCategory = categories.find((cat) => cat.id === overCatId)?.title;
     await updateListItem(activeId.toString(), {
       category: { connect: { id: overCatId?.toString() } },
     });

@@ -8,55 +8,6 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 
-// function FeatureCard({
-//   title,
-//   description,
-// }: {
-//   title: ReactNode;
-//   description: string;
-// }) {
-//   return (
-//     <Card>
-//       <CardHeader>{title}</CardHeader>
-//       <CardContent>
-//         <p>{description}</p>
-//       </CardContent>
-//     </Card>
-//   );
-// }
-
-// const FEATURES = [
-//   {
-//     title: "typescript",
-//     description: "",
-//   },
-//   {
-//     title: "prisma",
-//     description: `Managing the DB directly was not scaling well. Prisma seems to
-//                   be the most common ORM so I gave it a try.`,
-//   },
-//   {
-//     title: "zod",
-//     description: `Data entry (and editing) is one of the keep features of many
-//             apps. Validating the data from the forms is key.`,
-//   },
-//   {
-//     title: "NextUI",
-//     description: `There are a lot of component libraries each with pros and cons.
-//       Here I am trying NextUI to see how I like it.`,
-//   },
-//   {
-//     title: "Forms",
-//     description: `Data input through forms is important is most of the apps I do.
-//       I wanted to come up with a good template that I could use.`,
-//   },
-//   {
-//     title: "Drag and Drop (DnD)",
-//     description: `DnD can really enhance the user experience. Figuring out how to
-//       use it well is imporant.`,
-//   },
-// ];
-
 export default async function LandingPage() {
   const session = await auth();
 

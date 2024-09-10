@@ -1,4 +1,3 @@
-import { title } from "@/components/primitives";
 import { fetchChecklists } from "@/lib/checklist";
 import NewList from "./new-list";
 import ListCard from "./list-card";
@@ -7,10 +6,12 @@ export default async function ChecklistsPage() {
   const checklists = await fetchChecklists();
 
   return (
-    <div className="flex flex-col">
-      <div className="flex justify-between items-start">
+    <div className="w-full py-12 px-4 md:px-8 bg-gradient-to-b from-blue-100 to-blue-50 dark:from-gray-800 dark:to-gray-900">
+      <div className="flex justify-between">
         <div className="flex flex-col">
-          <h1 className={title() + ""}>My Lists</h1>
+          <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none text-blue-600 dark:text-blue-400">
+            My Lists
+          </h1>
           <p>{checklists.length} lists</p>
         </div>
         <NewList></NewList>
