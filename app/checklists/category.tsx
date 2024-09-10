@@ -52,9 +52,9 @@ export default function Category({
   const notCompleted = items.filter((item) => !item.completed) || [];
 
   return (
-    <div className="border-2 rounded-sm pb-2" ref={setNodeRef}>
+    <div className="flex flex-col items-start px-4 py-2 rounded-lg bg-blue-50 dark:bg-gray-700">
       <div
-        className="flex justify-between items-center border-b-1 px-2 py-1 mb-1"
+        className="w-full flex justify-between items-center border-b-2 border-red-400 px-2 py-1 mb-1"
         {...attributes}
         {...listeners}
       >
@@ -77,12 +77,13 @@ export default function Category({
           </form>
         )}
         <Trash
+          size={20}
           className="hover:stroke-red-400"
           onClick={() => handleRemoveCategory(category.id)}
         />
       </div>
 
-      <div className="flex flex-col min-h-16 " ref={setNodeRef}>
+      <div className="flex w-full flex-col mt-2 min-h-16 " ref={setNodeRef}>
         <SortableContext items={notCompleted}>
           {notCompleted.map((item: ItemType) => (
             <ListItem
@@ -96,11 +97,11 @@ export default function Category({
         </SortableContext>
       </div>
       {/* </SortableContext> */}
-      <form action={handleNewItem} ref={ref} className="m-2">
+      <form action={handleNewItem} ref={ref} className="m-2 w-full">
         <Input type="text" name="name" placeholder="Add item" />
       </form>
 
-      <div className="mt-4">
+      <div className="mt-4 w-full">
         <div className="flex justify-between text-sm mb-1 mx-2 ">
           <span className="font-bold ">Completed</span>
           <span>

@@ -9,7 +9,8 @@ import {
   createItem,
   deleteItem,
   addCategoryToChecklist,
-  updateCategory,
+  removeCategoryFromChecklist,
+  resetList,
   // removeCategoryFromChecklist,
 } from "@/lib/checklist";
 import {
@@ -48,10 +49,10 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
   );
 
   const ref = createRef<HTMLFormElement>();
-  const [activeCategory, setActiveCategory] = useState<CategoryType | null>(
-    null
-  );
-  const [activeItem, setActiveItem] = useState<ItemType | null>(null);
+  // const [activeCategory, setActiveCategory] = useState<CategoryType | null>(
+  //   null
+  // );
+  // const [activeItem, setActiveItem] = useState<ItemType | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -67,7 +68,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     // Make sure the category doesn't already exist on this list
     const existingCategory = categories.find((c) => c.title === categoryName);
     if (existingCategory) {
-      // TODO: Toast that the categoryt already exists
+      // TODO: Toast that the category already exists
       ref.current?.reset();
       return;
     }
@@ -100,10 +101,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
       });
       return;
     }
-    // const newChecklist = await removeCategoryFromChecklist(
-    //   checklist.id,
-    //   categoryId
-    // );
+    await removeCategoryFromChecklist(checklist.id, categoryId);
     setCategories(categories.filter((category) => category.id !== categoryId));
   }
 
@@ -156,18 +154,8 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     setItems(newItems);
   }
 
-  async function updateCategoryTitle(categoryId: string, title: string) {
-    const newCategories = categories.map((group) => {
-      return group.id === categoryId ? { ...group, title } : group;
-    });
-
-    await updateCategory(categoryId, { title });
-
-    setCategories(newCategories);
-  }
-
   // sets completed = false for all items in list
-  async function resetAllItems() {
+  function resetAllItems() {
     const newItems = items.map((item) => {
       return {
         ...item,
@@ -175,6 +163,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
       };
     });
     setItems(newItems);
+    resetList(checklist.id);
   }
 
   return (
@@ -215,7 +204,6 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
                   handleDeleteItem={handleDeleteItem}
                   handleUpdateItem={handleUpdateItem}
                   handleRemoveCategory={handleRemoveCategory}
-                  updateCategoryTitle={updateCategoryTitle}
                 />
               ))}
             </SortableContext>
@@ -227,17 +215,17 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
 
   function onDragStart(event: DragStartEvent) {
     // console.log("Drag Start: ", event);
-    if (event.active.data.current?.type === "Category") {
-      setActiveCategory(event.active.data.current.category);
-    }
-    if (event.active.data.current?.type === "Item") {
-      setActiveItem(event.active.data.current.item);
-    }
+    // if (event.active.data.current?.type === "Category") {
+    //   setActiveCategory(event.active.data.current.category);
+    // }
+    // if (event.active.data.current?.type === "Item") {
+    //   setActiveItem(event.active.data.current.item);
+    // }
   }
 
   function onDragEnd(event: DragEndEvent) {
-    setActiveCategory(null);
-    setActiveItem(null);
+    // setActiveCategory(null);
+    // setActiveItem(null);
 
     const { active, over } = event;
 

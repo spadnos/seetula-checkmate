@@ -203,6 +203,19 @@ export async function toggleItemComplete(id: Id) {
   }
 }
 
+export async function resetList(id: Id) {
+  if (!id) {
+    return;
+  }
+
+  await prisma.item.updateMany({
+    where: { checklistId: id },
+    data: {
+      completed: false,
+    },
+  });
+}
+
 export async function createItem(
   listId: string,
   categoryId: string,

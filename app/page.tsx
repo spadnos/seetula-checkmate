@@ -7,6 +7,7 @@ import { List, Share2, Zap } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { FeatureCard } from "@/components/landing/feature-card";
 
 export default async function LandingPage() {
   const session = await auth();
@@ -45,33 +46,21 @@ export default async function LandingPage() {
             Features
           </h2>
           <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
-            <div className="flex flex-col items-center space-y-2 p-4 rounded-lg bg-blue-50 dark:bg-gray-700">
-              <List className="h-12 w-12 text-blue-600 dark:text-blue-400" />
-              <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                Intuitive Task Management
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300 text-center">
-                Create, organize, and prioritize your tasks with ease.
-              </p>
-            </div>
-            <div className="flex flex-col items-center space-y-2 p-4 rounded-lg bg-blue-50 dark:bg-gray-700">
-              <Share2 className="h-12 w-12 text-blue-600 dark:text-blue-400" />
-              <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                Collaborative Checklists
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300 text-center">
-                Share and collaborate on checklists with your team or family.
-              </p>
-            </div>
-            <div className="flex flex-col items-center space-y-2 p-4 rounded-lg bg-blue-50 dark:bg-gray-700">
-              <Zap className="h-12 w-12 text-blue-600 dark:text-blue-400" />
-              <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                Smart Reminders
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300 text-center">
-                Never miss a task with our intelligent reminder system.
-              </p>
-            </div>
+            <FeatureCard
+              title="Reusage Lists"
+              description="Lists can be reset so common tasks can be repeated."
+              icon={List}
+            />
+            <FeatureCard
+              title="Collaborative Checklists"
+              description="Share and collaborate on checklists with your team or family."
+              icon={Share2}
+            />
+            <FeatureCard
+              title="Intuitive Task Management"
+              description="Create, organize, and prioritize your tasks with ease."
+              icon={Share2}
+            />
           </div>
         </div>
       </section>
