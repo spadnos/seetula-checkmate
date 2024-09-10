@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, createRef } from "react";
+import { useState, createRef, useId } from "react";
 
 import {
   ChecklistWithRelations,
@@ -21,7 +21,7 @@ import {
   useSensors,
   DragEndEvent,
   DragOverEvent,
-  DragStartEvent,
+  // DragStartEvent,
   UniqueIdentifier,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
@@ -199,6 +199,16 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     return newCategories;
   }
 
+  function reorderItems(activeId: UniqueIdentifier, overId: UniqueIdentifier) {
+    const activeIndex = items.findIndex((col) => col.id === activeId);
+    const overIndex = items.findIndex((col) => col.id === overId);
+
+    const newItems = arrayMove(items, activeIndex, overIndex);
+    return newItems;
+  }
+
+  const id = useId();
+
   return (
     <div>
       <div className="flex gap-4 items-center">
@@ -219,9 +229,10 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
       <div className="mt-4">
         <DndContext
           sensors={sensors}
-          onDragStart={onDragStart}
+          // onDragStart={onDragStart}
           onDragEnd={onDragEnd}
           onDragOver={onDragOver}
+          id={id}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
             <SortableContext items={categories.map((c) => c.id)}>
@@ -246,15 +257,15 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     </div>
   );
 
-  function onDragStart(event: DragStartEvent) {
-    // console.log("Drag Start: ", event);
-    // if (event.active.data.current?.type === "Category") {
-    //   setActiveCategory(event.active.data.current.category);
-    // }
-    // if (event.active.data.current?.type === "Item") {
-    //   setActiveItem(event.active.data.current.item);
-    // }
-  }
+  // function onDragStart(event: DragStartEvent) {
+  // console.log("Drag Start: ", event);
+  // if (event.active.data.current?.type === "Category") {
+  //   setActiveCategory(event.active.data.current.category);
+  // }
+  // if (event.active.data.current?.type === "Item") {
+  //   setActiveItem(event.active.data.current.item);
+  // }
+  // }
 
   function onDragEnd(event: DragEndEvent) {
     // setActiveCategory(null);
@@ -266,9 +277,11 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
 
     const activeId = active.id;
     const overId = over.id;
-
-    if (activeId === overId) return;
-
+    const isActiveTask = active.data.current?.type === "Item";
+    const isOverTask = over.data.current?.type === "Item";
+    // const isActiveCategory = active.data.current?.type === "Category";
+    const isOverCategory = over.data.current?.type === "Category";
+    console.log(isActiveTask, isOverCategory, isOverTask);
     // if a category is being dragged
     if (active.data.current?.type === "Category") {
       const newCategories = reorderCategories(activeId, overId);
@@ -282,8 +295,29 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
       });
     }
 
-    // if an item is being dragged
-    if (active.data.current?.type === "Item") {
+    // if an item is being dragged with a category
+    if (isActiveTask && isOverTask) {
+      const newItems = reorderItems(activeId, overId);
+      setItems(newItems);
+
+      // Need to update the category and the list order since we don't know which might have changed.
+      updateListItem(activeId.toString(), {
+        category: { connect: { id: over.data.current?.item.categoryId } },
+      });
+      updateChecklist(checklist.id, {
+        itemOrder: newItems
+          .map((cat) => {
+            return cat.id;
+          })
+          .join(","),
+      });
+    }
+
+    // an item is being dragged to a new category
+    if (isActiveTask && isOverCategory) {
+      updateListItem(activeId.toString(), {
+        category: { connect: { id: overId } },
+      });
     }
   }
 
@@ -297,10 +331,10 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
 
     const isActiveTask = active.data.current?.type === "Item";
     const isOverTask = over.data.current?.type === "Item";
+    const isActiveCategory = active.data.current?.type === "Category";
+    const isOverCategory = over.data.current?.type === "Category";
 
-    if (!isActiveTask) return;
-
-    // Dragging over annother item
+    // Dragging item over annother item
     if (isActiveTask && isOverTask) {
       const activeIndex = items.findIndex((item) => item.id === activeId);
       const overIndex = items.findIndex((item) => item.id === overId);
@@ -311,9 +345,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
       });
     }
 
-    // Dragging over a category
-    const isOverCategory = over.data.current?.type === "Category";
-
+    // Dragging item over a category
     if (isActiveTask && isOverCategory) {
       setItems((items) => {
         const activeIndex = items.findIndex((item) => item.id === activeId);
@@ -321,6 +353,15 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
         items[activeIndex].categoryId = overId.toString();
 
         return arrayMove(items, activeIndex, activeIndex);
+      });
+    }
+
+    // dragging a category
+    if (isActiveCategory && isOverCategory) {
+      setCategories(() => {
+        const activeIndex = categories.findIndex((cat) => cat.id === activeId);
+        const overIndex = categories.findIndex((cat) => cat.id === overId);
+        return arrayMove(categories, activeIndex, overIndex);
       });
     }
   }

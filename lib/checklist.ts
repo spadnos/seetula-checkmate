@@ -133,7 +133,7 @@ export async function createChecklist(data: {
 }
 
 export async function updateChecklist(id: Id, data: object) {
-  console.log("updating checklist", data);
+  // console.log("updating checklist", data);
   if (!id) {
     return;
   }
@@ -162,21 +162,23 @@ export async function deleteList(id: string | undefined) {
     console.log(error);
   }
 }
-const itemSchema = z.object({
-  title: z.string().min(1, "Name must be at least 1 character").max(191),
-  quantity: z.coerce.number().optional(),
-});
+// const itemSchema = z.object({
+//   title: z.string().min(1, "Name must be at least 1 character").max(191),
+//   quantity: z.coerce.number().optional(),
+// });
 
 export async function updateListItem(id: Id, data: object) {
-  const validatedData = itemSchema.safeParse(data);
-  if (!validatedData.success) {
-    return { success: false, message: validatedData.error?.errors[0].message };
-  }
+  // const validatedData = itemSchema.safeParse(data);
+  // if (!validatedData.success) {
+  //   console.log("oops", data);
+  //   return { success: false, message: validatedData.error?.errors[0].message };
+  // }
 
+  // console.log("update item", data);
   try {
     const record = await prisma.item.update({
       where: { id },
-      data: validatedData.data,
+      data: data,
     });
     return record;
   } catch (error) {
