@@ -102,14 +102,14 @@ export default function ListItem({
 
       <div className="flex gap-2">
         <div className="flex gap-2 group-hover:visible">
-          <Message size={20} />
+          <Message size={16} />
           <Pencil
-            size={20}
+            size={16}
             className="hover:stroke-1"
             onClick={toggleEditMode}
           />
           <Trash
-            size={20}
+            size={16}
             className="hover:stroke-1 hover:stroke-red-500"
             onClick={() => handleDeleteItem(item.id)}
           />

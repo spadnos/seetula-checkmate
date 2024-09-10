@@ -133,6 +133,7 @@ export async function createChecklist(data: {
 }
 
 export async function updateChecklist(id: Id, data: object) {
+  console.log("updating checklist", data);
   if (!id) {
     return;
   }

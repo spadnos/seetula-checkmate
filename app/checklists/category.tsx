@@ -109,8 +109,6 @@ export default function Category({
           </span>
         </div>
         {completed.map((item: ItemType) => (
-          // <div key={index}>{item.name}</div>
-
           <ListItem
             key={item.id}
             item={item}

@@ -59,7 +59,7 @@ export default async function LandingPage() {
             <FeatureCard
               title="Intuitive Task Management"
               description="Create, organize, and prioritize your tasks with ease."
-              icon={Share2}
+              icon={Zap}
             />
           </div>
         </div>

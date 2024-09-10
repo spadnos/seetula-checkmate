@@ -11,6 +11,7 @@ import {
   addCategoryToChecklist,
   removeCategoryFromChecklist,
   resetList,
+  updateChecklist,
   // removeCategoryFromChecklist,
 } from "@/lib/checklist";
 import {
@@ -21,6 +22,7 @@ import {
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
+  UniqueIdentifier,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import Category from "../category";
@@ -40,12 +42,26 @@ function sortItems(items: ItemType[], order: string): ItemType[] {
   return sortedItems;
 }
 
+function sortCategories(
+  categories: CategoryType[],
+  order: string
+): CategoryType[] {
+  // console.log("order = ", order.split(","));
+  if (!order) {
+    return categories;
+  }
+  const sortedCategories = order
+    .split(",")
+    .map((id) => categories.find((cat) => cat.id === id)) as CategoryType[];
+  return sortedCategories;
+}
+
 function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
   const [items, setItems] = useState<ItemType[]>(
     sortItems(checklist.items, checklist.itemOrder)
   );
   const [categories, setCategories] = useState<CategoryType[]>(
-    checklist.categories
+    sortCategories(checklist.categories, checklist.categoryOrder)
   );
 
   const ref = createRef<HTMLFormElement>();
@@ -166,6 +182,23 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     resetList(checklist.id);
   }
 
+  function reorderCategories(
+    activeId: UniqueIdentifier,
+    overId: UniqueIdentifier
+  ) {
+    const activeColumnIndex = categories.findIndex(
+      (col) => col.id === activeId
+    );
+    const overColumnIndex = categories.findIndex((col) => col.id === overId);
+
+    const newCategories = arrayMove(
+      categories,
+      activeColumnIndex,
+      overColumnIndex
+    );
+    return newCategories;
+  }
+
   return (
     <div>
       <div className="flex gap-4 items-center">
@@ -236,22 +269,21 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
 
     if (activeId === overId) return;
 
+    // if a category is being dragged
     if (active.data.current?.type === "Category") {
-      setCategories((categories) => {
-        const activeColumnIndex = categories.findIndex(
-          (col) => col.id === activeId
-        );
-        const overColumnIndex = categories.findIndex(
-          (col) => col.id === overId
-        );
-
-        const newCategories = arrayMove(
-          categories,
-          activeColumnIndex,
-          overColumnIndex
-        );
-        return newCategories;
+      const newCategories = reorderCategories(activeId, overId);
+      setCategories(newCategories);
+      updateChecklist(checklist.id, {
+        categoryOrder: newCategories
+          .map((cat) => {
+            return cat.id;
+          })
+          .join(","),
       });
+    }
+
+    // if an item is being dragged
+    if (active.data.current?.type === "Item") {
     }
   }
 
@@ -269,11 +301,9 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     if (!isActiveTask) return;
 
     // Dragging over annother item
-    let overCatId: string | number | null = null;
     if (isActiveTask && isOverTask) {
       const activeIndex = items.findIndex((item) => item.id === activeId);
       const overIndex = items.findIndex((item) => item.id === overId);
-      overCatId = items[overIndex].categoryId;
       setItems((items) => {
         items[activeIndex].categoryId = items[overIndex].categoryId;
 
@@ -285,7 +315,6 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     const isOverCategory = over.data.current?.type === "Category";
 
     if (isActiveTask && isOverCategory) {
-      overCatId = overId;
       setItems((items) => {
         const activeIndex = items.findIndex((item) => item.id === activeId);
 
@@ -294,10 +323,6 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
         return arrayMove(items, activeIndex, activeIndex);
       });
     }
-    // const newCategory = categories.find((cat) => cat.id === overCatId)?.title;
-    await updateListItem(activeId.toString(), {
-      category: { connect: { id: overCatId?.toString() } },
-    });
   }
 }
 
