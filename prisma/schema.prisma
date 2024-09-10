@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model User {
+  id         String       @id @default(cuid())
+  createdAt  DateTime     @default(now())
+  email      String       @unique
+  name       String?
+  Checklist  Checklist[]
+  Comment    Comment[]
+  Item       Item[]
+  ItemStatus ItemStatus[]
+  Poll       Poll[]
+  Rank       Rank[]
+}
+
+model Poll {
+  id           String   @id @default(cuid())
+  title        String   @default("")
+  description  String?
+  userId       String
+  allowWriteIn Boolean  @default(false)
+  choices      Choice[]
+  owner        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Rank         Rank[]
+}
+
+model Choice {
+  id     String @id @default(cuid())
+  name   String
+  pollId String
+  poll   Poll   @relation(fields: [pollId], references: [id])
+
+  @@unique([id, pollId])
+}
+
+model Rank {
+  id     String @id @default(cuid())
+  rank   String
+  pollId String
+  userId String
+  poll   Poll   @relation(fields: [pollId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, pollId])
+}
+
+model Checklist {
+  id            String     @id @default(cuid())
+  title         String
+  description   String?
+  userId        String
+  categoryOrder String     @default("")
+  itemOrder     String     @default("")
+  categories    Category[]
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items         Item[]
+}
+
+model Item {
+  id          String    @id @default(cuid())
+  title       String
+  categoryId  String
+  completed   Boolean
+  checklistId String
+  userId      String
+  private     Boolean   @default(false)
+  quantity    Int       @default(1)
+  category    Category  @relation(fields: [categoryId], references: [id])
+  checklist   Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  title       String    @unique
+  checklistId String
+  checklist   Checklist @relation(fields: [checklistId], references: [id])
+  items       Item[]
+  comments    Comment[] @relation("CategoryToComment")
+}
+
+model Comment {
+  id         String     @id @default(cuid())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  comment    String
+  authorId   String
+  author     User       @relation(fields: [authorId], references: [id])
+  categories Category[] @relation("CategoryToComment")
+}
+
+model ItemStatus {
+  id        String  @id @default(cuid())
+  title     String
+  category  String?
+  userId    String
+  completed Boolean @default(false)
+  user      User    @relation(fields: [userId], references: [id])
+}
