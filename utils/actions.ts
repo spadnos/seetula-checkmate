@@ -1,11 +1,15 @@
 "use server";
 
-import { createChecklist, updateChecklist } from "@/lib/checklist";
+import {
+  createChecklist,
+  updateCategory,
+  updateChecklist,
+} from "@/lib/checklist";
 // import { createPoll } from "@/app/lib/polls";
 // import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 // import { redirect } from "next/navigation";
-import { z, ZodError } from "zod";
+import { z } from "zod";
 
 const createListSchema = z.object({
   name: z.string().min(1, "Name must be at least 1 character").max(191),
@@ -60,39 +64,45 @@ export type FormState = {
   timestamp: number;
 };
 
-const createPollSchema = z.object({
-  title: z.string().min(2).max(191),
-  description: z.string().optional(),
-});
+// const createPollSchema = z.object({
+//   title: z.string().min(2).max(191),
+//   description: z.string().optional(),
+// });
 
-function fromErrorToFormState(error: unknown) {
-  // if validation error with Zod, return first error message
-  if (error instanceof ZodError) {
-    return {
-      status: "ERROR" as const,
-      message: "",
-      fieldErrors: error.flatten().fieldErrors,
-      timestamp: Date.now(),
-    };
-    // if another error instance, return error message
-    // e.g. database error
-  } else if (error instanceof Error) {
-    return {
-      status: "ERROR" as const,
-      message: error.message,
-      fieldErrors: {},
-      timestamp: Date.now(),
-    };
-    // if not an error instance but something else crashed
-    // return generic error message
-  } else {
-    return {
-      status: "ERROR" as const,
-      message: "An unknown error occurred",
-      fieldErrors: {},
-      timestamp: Date.now(),
-    };
-  }
+// function fromErrorToFormState(error: unknown) {
+//   // if validation error with Zod, return first error message
+//   if (error instanceof ZodError) {
+//     return {
+//       status: "ERROR" as const,
+//       message: "",
+//       fieldErrors: error.flatten().fieldErrors,
+//       timestamp: Date.now(),
+//     };
+//     // if another error instance, return error message
+//     // e.g. database error
+//   } else if (error instanceof Error) {
+//     return {
+//       status: "ERROR" as const,
+//       message: error.message,
+//       fieldErrors: {},
+//       timestamp: Date.now(),
+//     };
+//     // if not an error instance but something else crashed
+//     // return generic error message
+//   } else {
+//     return {
+//       status: "ERROR" as const,
+//       message: "An unknown error occurred",
+//       fieldErrors: {},
+//       timestamp: Date.now(),
+//     };
+//   }
+// }
+
+export async function updateCategoryAction(formData: FormData) {
+  await updateCategory(formData.get("id")?.toString(), {
+    title: formData.get("title")?.toString(),
+  });
 }
 
 // function toFormState(status: FormState["status"], message: string): FormState {

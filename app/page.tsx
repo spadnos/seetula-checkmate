@@ -2,12 +2,13 @@ import { auth } from "@/auth";
 // import { Card, CardContent, CardHeader } from "@/components/ui/card";
 // import { ReactNode } from "react";
 // import { title } from "@/components/primitives";
-import { Button } from "@/components/ui/button";
 import { List, Share2, Zap } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { siteConfig } from "@/config/site";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
+// import Link from "next/link";
 import { FeatureCard } from "@/components/landing/feature-card";
+import { SignIn } from "@/components/auth-components";
+import Logo from "@/components/seetula/logo";
 
 export default async function LandingPage() {
   const session = await auth();
@@ -17,25 +18,20 @@ export default async function LandingPage() {
       <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-blue-100 to-blue-50 dark:from-gray-800 dark:to-gray-900">
         <div className=" px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none text-blue-600 dark:text-blue-400">
-                Simplify Your Life with {siteConfig.name}
-              </h1>
+            <Logo size="xl" />
+            <div className="space-y-2 flex flex-col">
+              <h2 className="text-2xl font-bold tracking-tighter sm:text-2xl md:text-2xl lg:text-3xl/none">
+                The Ultimate Checklist
+              </h2>
               <p className="mx-auto max-w-[700px] text-gray-600 md:text-xl dark:text-gray-300">
-                The ultimate checklist app to boost your productivity and
-                organize your tasks effortlessly.
+                Boost your productivity, organize your tasks, keep track of all
+                your lists effortlessly.
               </p>
             </div>
             <div className="space-x-4">
-              <Button className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                Get Started
-              </Button>
-              <Button
-                variant="outline"
-                className="text-blue-600 border-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-400 dark:hover:bg-gray-800"
-              >
-                Learn More
-              </Button>
+              {!session && (
+                <SignIn className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600" />
+              )}
             </div>
           </div>
         </div>
@@ -47,7 +43,7 @@ export default async function LandingPage() {
           </h2>
           <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
             <FeatureCard
-              title="Reusage Lists"
+              title="Reusable Lists"
               description="Lists can be reset so common tasks can be repeated."
               icon={List}
             />
@@ -72,12 +68,12 @@ export default async function LandingPage() {
                 Ready to Get Organized?
               </h2>
               <p className="mx-auto max-w-[600px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-300">
-                Join thousands of satisfied users and start your journey to a
+                Join at least one satisfied user and start your journey to a
                 more productive life today.
               </p>
             </div>
             <div className="w-full max-w-sm space-y-2">
-              <form className="flex space-x-2">
+              {/* <form className="flex space-x-2">
                 <Input
                   className="max-w-lg flex-1"
                   placeholder="Enter your email"
@@ -97,8 +93,8 @@ export default async function LandingPage() {
                   href="#"
                 >
                   Terms & Conditions
-                </Link>
-              </p>
+                </Link> 
+              </p>*/}
             </div>
           </div>
         </div>

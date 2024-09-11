@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function ModeToggle() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { theme, setTheme } = useTheme();
 
   return (

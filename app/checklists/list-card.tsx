@@ -1,6 +1,6 @@
 "use client";
 
-import { createRef, useState } from "react";
+import { useState } from "react";
 
 // import { LuPencil, LuTrash } from "react-icons/lu";
 import { Pencil1Icon as PencilIcon, TrashIcon } from "@radix-ui/react-icons";
@@ -9,23 +9,18 @@ import { useRouter } from "next/navigation";
 import NewList from "./new-list";
 import ListModal from "./list-modal";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+// import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
-import { Prisma } from "@prisma/client";
 
-// interface ChecklistType {
-//   id: string;
-//   title: string;
-//   user: object;
-//   items: object[],
+export interface ChecklistType {
+  id: string;
+  title: string;
+  description: string | null;
+  user?: object;
+  items: object[];
+}
 
-// }
-
-export default function ListCard({
-  list,
-}: {
-  list: Prisma.ChecklistCreateInput;
-}) {
+export default function ListCard({ list }: { list: ChecklistType }) {
   const [showListEdit, setShowListEdit] = useState(false);
   const router = useRouter();
 
@@ -44,14 +39,12 @@ export default function ListCard({
   return (
     <div>
       {showListEdit && <ListModal list={list} onClose={closeListModal} />}
-      <Card className="border-2 px-2">
-        <CardHeader className="flex justify-between items-start border-b">
-          <div className="flex flex-col">
-            <Link href={`/checklists/${list.id}`}>
-              <h2 className="font-bold text-l">{list.title}</h2>
-            </Link>
-          </div>
-          <div className="flex">
+      <div className="flex flex-col items-start px-4 py-2 rounded-lg bg-blue-50 dark:bg-gray-700">
+        <div className="w-full flex justify-between items-center border-b-2 border-red-400 py-1 mb-1">
+          <Link href={`/checklists/${list.id}`}>
+            <h2 className="font-bold text-l">{list.title}</h2>
+          </Link>
+          <div className="flex items-center">
             <NewList list={list}>
               <PencilIcon />
             </NewList>
@@ -59,13 +52,13 @@ export default function ListCard({
               <TrashIcon onClick={handleDelete} />
             </Button>
           </div>
-        </CardHeader>
+        </div>
         {/* <Divider /> */}
-        <CardContent>
+        <div>
           <p>{list.items?.length} items</p>
           <p>{list.description}</p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

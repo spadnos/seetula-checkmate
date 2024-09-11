@@ -4,19 +4,20 @@ import { useFormState } from "react-dom";
 
 // import { LuX } from "react-icons/lu";
 import { createListAction, updateListAction } from "@/utils/actions";
-import { Prisma } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ChecklistType } from "./list-card";
 
 export default function ListModal({
   list,
   onClose,
 }: {
-  list?: Prisma.ChecklistCreateInput;
+  list?: ChecklistType;
   onClose: () => void;
 }) {
-  const [data, formAction] = useFormState(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_data, formAction] = useFormState(
     processForm,
     {} as { success: boolean; message: string }
   );

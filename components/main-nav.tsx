@@ -73,7 +73,7 @@ export function MainNav() {
     <div className="flex items-center gap-4">
       <CustomLink href="/">
         <Button variant="ghost" className="p-0">
-          <Logo name="checklists" />
+          <Logo />
         </Button>
       </CustomLink>
       <NavigationMenu>

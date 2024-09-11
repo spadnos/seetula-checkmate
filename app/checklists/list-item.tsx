@@ -12,6 +12,7 @@ import { Pencil } from "lucide-react";
 import { Trash } from "lucide-react";
 import { MessageCircle as Message } from "lucide-react";
 import { Id, ItemType } from "./types";
+import { DragHandleDots2Icon as DragIcon } from "@radix-ui/react-icons";
 
 export default function ListItem({
   item,
@@ -80,11 +81,11 @@ export default function ListItem({
       style={style}
       ref={setNodeRef}
     >
-      <div className="flex items-center">
+      <div className="flex items-start">
         <button {...attributes} {...listeners} className="">
-          ⣿
+          <DragIcon />
         </button>
-        <div className="mx-2 flex items-center space-x-2">
+        <div className="mx-2 flex items-start space-x-2 mb-1">
           <Checkbox
             id="completed"
             defaultChecked={item.completed}

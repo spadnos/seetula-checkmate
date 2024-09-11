@@ -12,15 +12,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Prisma } from "@prisma/client";
 import { ReactNode, useState } from "react";
 import { createListAction, updateListAction } from "@/utils/actions";
+import { ChecklistType } from "./list-card";
 
 export default function NewList({
   list,
   children,
 }: {
-  list?: Prisma.ChecklistCreateInput;
+  list?: ChecklistType;
   children?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);

@@ -8,6 +8,7 @@ import { CategoryType, Id, ItemType } from "./types";
 
 import ListItem from "./list-item";
 import { Trash } from "lucide-react";
+import { updateCategoryAction } from "@/utils/actions";
 
 type props = {
   category: CategoryType;
@@ -48,6 +49,11 @@ export default function Category({
     ref.current?.reset();
   }
 
+  async function handleCategoryTitle(formData: FormData) {
+    updateCategoryAction(formData);
+    setEditTitle(false);
+  }
+
   const completed = items.filter((item) => item.completed) || [];
   const notCompleted = items.filter((item) => !item.completed) || [];
 
@@ -67,13 +73,16 @@ export default function Category({
           </h2>
         )}
         {editTitle && (
-          <form>
+          <form action={handleCategoryTitle}>
+            <input hidden name="id" value={category.id} />
             <input
               defaultValue={category.title}
+              name="title"
               className="px-2"
               autoFocus
-              onBlur={() => setEditTitle(false)}
+              // onBlur={() => setEditTitle(false)}
             />
+            <input type="submit" hidden />
           </form>
         )}
         <Trash

@@ -4,7 +4,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-import { z } from "zod";
+// import { z } from "zod";
 import { Id } from "@/lib/types";
 import { auth } from "@/auth";
 
@@ -279,7 +279,9 @@ export async function createCategory(title: string, checklistId: string) {
   });
 }
 
-export async function updateCategory(id: Id, data: object) {
+export async function updateCategory(id: Id | undefined, data: object) {
+  if (!id) return;
+
   try {
     return await prisma.category.update({
       where: { id },
