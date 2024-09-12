@@ -33,12 +33,18 @@ import { toast } from "@/hooks/use-toast";
 
 function sortItems(items: ItemType[], order: string): ItemType[] {
   // console.log("order = ", order.split(","));
+  // console.log(JSON.stringify(items, null, 2));
   if (!order) {
     return items;
   }
+
+  // Sort the items based on the order. Remove any null's. This shouldn't
+  // happen unless the order and the items list get out of sync.
   const sortedItems = order
     .split(",")
-    .map((id) => items.find((item) => item.id === id) as ItemType);
+    .map((id) => items.find((item) => item.id === id) as ItemType)
+    .filter((item) => item);
+  // console.log("sorted: ", JSON.stringify(sortedItems, null, 2));
   return sortedItems;
 }
 
@@ -46,7 +52,6 @@ function sortCategories(
   categories: CategoryType[],
   order: string
 ): CategoryType[] {
-  // console.log("order = ", order.split(","));
   if (!order) {
     return categories;
   }
@@ -234,6 +239,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
           onDragOver={onDragOver}
           id={id}
         >
+          {/* <pre>{JSON.stringify(items, null, 2)}</pre> */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
             <SortableContext items={categories.map((c) => c.id)}>
               {categories.map((category) => (
@@ -241,7 +247,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
                   key={category.id}
                   category={category}
                   items={items.filter(
-                    (item) => item.categoryId === category.id
+                    (item) => item?.categoryId === category.id
                   )}
                   addNewItem={handleNewItem}
                   updateCheckStatus={updateCheckStatus}
