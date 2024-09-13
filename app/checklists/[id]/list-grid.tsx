@@ -40,12 +40,15 @@ function sortItems(items: ItemType[], order: string): ItemType[] {
 
   // Sort the items based on the order. Remove any null's. This shouldn't
   // happen unless the order and the items list get out of sync.
-  const sortedItems = order
-    .split(",")
+  const itemOrder = order.split(",");
+  const sortedItems = itemOrder
     .map((id) => items.find((item) => item.id === id) as ItemType)
     .filter((item) => item);
+
+  // if any items are not in the order list, add them to the end of the items.
+  const unorderedItems = items.filter((item) => itemOrder.indexOf(item.id) < 0);
   // console.log("sorted: ", JSON.stringify(sortedItems, null, 2));
-  return sortedItems;
+  return [...sortedItems, ...unorderedItems];
 }
 
 function sortCategories(
