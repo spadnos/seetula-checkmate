@@ -3,11 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-// import {
-//   LuPencil,
-//   LuTrash2,
-//   LuMessageSquare,
-// } from "react-icons/lu";
+
 import { Pencil } from "lucide-react";
 import { Trash } from "lucide-react";
 import { MessageCircle as Message } from "lucide-react";

@@ -147,19 +147,21 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
   }
 
   async function handleUpdateItem(id: Id, data: object) {
-    await updateListItem(id, data);
-    const newItems = items.map((item) => {
-      if (item.id === id) {
-        return { ...item, ...data };
-      }
-      return item;
-    });
+    const result = await updateListItem(id, data);
+    if (result.success) {
+      const newItems = items.map((item) => {
+        if (item.id === id && result.data) {
+          return result.data;
+        }
+        return item;
+      });
 
-    setItems(newItems);
+      setItems(newItems);
+    }
   }
 
   async function updateCheckStatus(itemId: string) {
-    console.log("updateCheckStatus");
+    // console.log("updateCheckStatus");
     const newItems = items.map((item) =>
       item.id === itemId ? { ...item, completed: !item.completed } : item
     );

@@ -4,7 +4,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// import { z } from "zod";
+import { z } from "zod";
 import { Id } from "@/lib/types";
 import { auth } from "@/auth";
 
@@ -162,25 +162,26 @@ export async function deleteList(id: string | undefined) {
     console.log(error);
   }
 }
-// const itemSchema = z.object({
-//   title: z.string().min(1, "Name must be at least 1 character").max(191),
-//   quantity: z.coerce.number().optional(),
-// });
+
+const itemSchema = z.object({
+  title: z.string().min(1, "Name must be at least 1 character").max(191),
+  quantity: z.coerce.number().optional(),
+});
 
 export async function updateListItem(id: Id, data: object) {
-  // const validatedData = itemSchema.safeParse(data);
-  // if (!validatedData.success) {
-  //   console.log("oops", data);
-  //   return { success: false, message: validatedData.error?.errors[0].message };
-  // }
+  const validatedData = itemSchema.safeParse(data);
+  if (!validatedData.success) {
+    // console.log("oops", data);
+    return { success: false, message: validatedData.error?.errors[0].message };
+  }
 
   // console.log("update item", data);
   try {
     const record = await prisma.item.update({
       where: { id },
-      data: data,
+      data: validatedData.data,
     });
-    return record;
+    return { success: true, data: record };
   } catch (error) {
     console.log(error);
     return { success: false, message: error };
