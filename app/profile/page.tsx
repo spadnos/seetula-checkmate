@@ -24,13 +24,13 @@ async function ProfilePage() {
               type="text"
               name="firstName"
               label="First Name"
-              defaultValue={profile.name ? profile.name.split(" ")[0] : ""}
+              defaultValue={profile?.name ? profile.name.split(" ")[0] : ""}
             />
             <FormInput
               type="text"
               name="lastName"
               label="Last Name"
-              defaultValue={profile.name ? profile.name.split(" ")[1] : ""}
+              defaultValue={profile?.name ? profile.name.split(" ")[1] : ""}
             />
             <FormInput
               type="text"
