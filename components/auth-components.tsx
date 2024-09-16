@@ -9,7 +9,10 @@ export function SignIn({
     <form
       action={async () => {
         "use server";
-        await signIn(provider, { redirectTo: "/checklists", redirect: true });
+        await signIn(provider, {
+          redirectTo: "/profile/create",
+          redirect: true,
+        });
       }}
     >
       <Button {...props}>Sign In</Button>
