@@ -42,7 +42,9 @@ export default function ListCard({ list }: { list: ChecklistType }) {
       <div className="flex flex-col items-start px-4 py-2 rounded-lg bg-blue-50 dark:bg-gray-700">
         <div className="w-full flex justify-between items-center border-b-2 border-red-400 py-1 mb-1">
           <Link href={`/checklists/${list.id}`}>
-            <h2 className="font-bold text-l">{list.title}</h2>
+            <h2 className="font-bold text-l hover:text-xl hover:underline">
+              {list.title}
+            </h2>
           </Link>
           <div className="flex items-center">
             <NewList list={list}>

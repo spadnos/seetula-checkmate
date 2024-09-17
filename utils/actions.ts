@@ -100,7 +100,7 @@ export async function updateListAction(
     description: formFields.description.toString(),
   });
 
-  // revalidatePath("/");
+  revalidatePath("/checklists");
   return { success: true, message: "List updated" };
 }
 
@@ -116,7 +116,7 @@ export async function createListAction(formData: FormData) {
   });
   // console.log(result);
 
-  // revalidatePath("/checklis");
+  revalidatePath("/checklists");
   return { success: true, message: "List updated" };
 }
 

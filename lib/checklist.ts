@@ -25,6 +25,17 @@ export type ChecklistWithRelations = Prisma.ChecklistGetPayload<{
 // }
 
 // export const testLog = authWrapper(() => console.log("hello"));
+export async function createUser() {
+  const session = await auth();
+  if (!session) throw new Error("Please login to create a profile");
+
+  await prisma.user.create({
+    data: {
+      email: session?.user?.email || "",
+      // ...validatedFields,
+    },
+  });
+}
 
 export async function fetchChecklists() {
   const session = await auth();

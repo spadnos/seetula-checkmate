@@ -3,13 +3,17 @@ import FormInput from "@/components/form/FormInput";
 import { SubmitButton } from "@/components/form/Buttons";
 import { createProfileAction, fetchProfile } from "@/utils/actions";
 import { redirect } from "next/navigation";
+import { createUser } from "@/lib/checklist";
 
 async function CreateProfile() {
   // get next auth user
   const user = await fetchProfile(false);
 
   if (user) redirect("/checklists");
+  await createUser();
+  redirect("/checklists");
 
+  // currently not in use. Eventually I will probably want to add a profile to the db
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-8 capitalize">new user</h1>

@@ -21,7 +21,7 @@ const NAVLINKS = [
     label: "Dashboard",
     href: "/dashboard",
     requiresAuth: true,
-    hidden: false,
+    hidden: true,
   },
   {
     label: "Checklists",
