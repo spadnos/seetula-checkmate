@@ -27,7 +27,7 @@ import {
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import Category from "../category";
 import { Input } from "@/components/ui/input";
-import { CategoryType, Id, ItemType } from "../types";
+import { CategoryType, Id, ItemType } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
@@ -61,7 +61,10 @@ function sortCategories(
   const sortedCategories = order
     .split(",")
     .map((id) => categories.find((cat) => cat.id === id)) as CategoryType[];
-  return sortedCategories;
+  // console.log("categories: ", JSON.stringify(categories, null, 2));
+  // console.log("order: ", JSON.stringify(order, null, 2));
+  // remove any null's
+  return sortedCategories.filter((cat) => cat);
 }
 
 function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {

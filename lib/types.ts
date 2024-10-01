@@ -14,3 +14,11 @@ export interface CategoryType {
   title: string;
   checklistId: string;
 }
+
+export interface ChecklistType {
+  id: Id;
+  title: string;
+  description: string | null;
+  user?: object;
+  items: ItemType[];
+}

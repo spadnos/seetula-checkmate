@@ -4,9 +4,9 @@ import { createRef, useState } from "react";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { Input } from "@/components/ui/input";
 
-import { CategoryType, Id, ItemType } from "./types";
+import { CategoryType, Id, ItemType } from "@/lib/types";
 
-import ListItem from "./list-item";
+import ListItem from "../../components/checklist/list-item";
 import { Trash } from "lucide-react";
 import { updateCategoryAction } from "@/utils/actions";
 
@@ -122,7 +122,7 @@ export default function Category({
             key={item.id}
             item={item}
             toggleCompleted={updateCheckStatus}
-            handleDeleteItem={updateCheckStatus}
+            handleDeleteItem={handleDeleteItem}
             handleUpdateItem={handleUpdateItem}
           />
         ))}

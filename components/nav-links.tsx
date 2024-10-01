@@ -1,0 +1,49 @@
+"use client";
+
+import { HomeIcon, GroupIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
+
+// Map of links to display in the side navigation.
+// Depending on the size of the application, this would be stored in a database.
+const links = [
+  {
+    name: "Home",
+    href: "/checklists",
+    icon: HomeIcon,
+  },
+  {
+    name: "Invoices",
+    href: "/dashboard/invoices",
+    icon: HomeIcon,
+  },
+  {
+    name: "Customers",
+    href: "/dashboard/customers",
+    icon: GroupIcon,
+  },
+];
+
+export default function NavLinks() {
+  const pathname = usePathname();
+  return (
+    <>
+      {links.map((link) => {
+        const LinkIcon = link.icon;
+        const cn = clsx(
+          "flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium bg-gray-50 hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3",
+          {
+            "bg-sky-100 text-blue-600": pathname === link.href,
+          }
+        );
+        return (
+          <Link key={link.name} href={link.href} className={cn}>
+            <LinkIcon className="w-6" />
+            <p className="hidden md:block">{link.name}</p>
+          </Link>
+        );
+      })}
+    </>
+  );
+}

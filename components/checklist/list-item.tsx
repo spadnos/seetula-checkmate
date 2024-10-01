@@ -1,3 +1,5 @@
+"use client";
+
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Input } from "@/components/ui/input";
@@ -7,7 +9,7 @@ import { useState } from "react";
 import { Pencil } from "lucide-react";
 import { Trash } from "lucide-react";
 import { MessageCircle as Message } from "lucide-react";
-import { Id, ItemType } from "./types";
+import { Id, ItemType } from "@/lib/types";
 import { DragHandleDots2Icon as DragIcon } from "@radix-ui/react-icons";
 
 export default function ListItem({

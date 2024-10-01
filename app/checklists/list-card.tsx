@@ -11,14 +11,7 @@ import ListModal from "./list-modal";
 import { Button } from "@/components/ui/button";
 // import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
-
-export interface ChecklistType {
-  id: string;
-  title: string;
-  description: string | null;
-  user?: object;
-  items: object[];
-}
+import { ChecklistType } from "@/lib/types";
 
 export default function ListCard({ list }: { list: ChecklistType }) {
   const [showListEdit, setShowListEdit] = useState(false);
