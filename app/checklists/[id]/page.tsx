@@ -10,13 +10,15 @@ async function ChecklistPage({
   searchParams,
 }: {
   params: { id: string };
-  searchParams: { view: string };
+  searchParams: { view: string; hideCompleted?: boolean };
 }) {
   // TODO: This can be more efficient
   const checklist = await fetchChecklist(params.id);
-  const checklists = await fetchChecklists();
-  // console.log("searchParams: ", searchParams);
-  const { view = "grid" } = searchParams;
+  const checklists = await fetchChecklists({
+    includeCategories: false,
+    includeItems: false,
+  });
+  const { view = "grid", hideCompleted = false } = searchParams;
 
   // console.log("checklists: ", JSON.stringify(checklists, null, 2));
   if (!checklist) {
@@ -36,9 +38,11 @@ async function ChecklistPage({
         <p className="mt-2">{checklist.description}</p>
       </div>
       <div className="flex gap-4">
-        <SideNav />
+        <SideNav checklists={checklists} />
 
-        {view === "list" && <ListView checklist={checklist} />}
+        {view === "list" && (
+          <ListView hideCompleted={hideCompleted} checklist={checklist} />
+        )}
         {view === "grid" && <ListGrid checklist={checklist} />}
       </div>
     </div>

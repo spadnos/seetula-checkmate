@@ -1,4 +1,8 @@
+"use client";
+
 import { ChecklistType } from "@/lib/types";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import path from "path";
 // import NavDropdown from "./checklist/nav-dropdown";
 
 const VIEWS = [
@@ -11,11 +15,18 @@ const VIEWS = [
     name: "List",
   },
 ];
-export default function SideNav() {
-  const checklists: ChecklistType[] = [];
+export default function SideNav({
+  checklists,
+}: {
+  checklists: ChecklistType[];
+}) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+  const params = new URLSearchParams(searchParams);
 
   return (
-    <div className="flex h-full flex-col px-3 py-4 md:px-2">
+    <div className="w-64 flex h-full flex-col px-3 py-4 md:px-2">
       <div className="flex grow flex-row justify-between md:flex-col">
         {/* <NavDropdown checklists={[]} /> */}
         <div className="mb-4">
@@ -26,8 +37,11 @@ export default function SideNav() {
             <select
               id="checklist"
               name="checklistId"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue={checklists[0]?.id || ""}
+              onChange={(e) => {
+                replace(`/checklists/${e.target.value}?${params.toString()}`);
+              }}
             >
               <option value="" disabled>
                 Select a checklist
@@ -44,12 +58,16 @@ export default function SideNav() {
           <label htmlFor="view" className="mb-2 block text-sm font-medium">
             Select View
           </label>
-          <div className="relative">
+          <div className="">
             <select
               id="view"
               name="viewId"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
+              className="w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue={params.get("view") || ""}
+              onChange={(e) => {
+                params.set("view", e.target.value);
+                replace(`${pathname}?${params.toString()}`);
+              }}
             >
               <option value="" disabled>
                 Select a view
@@ -67,8 +85,17 @@ export default function SideNav() {
             <input
               type="checkbox"
               className="h-4 w-4 rounded border-gray-300"
+              defaultChecked={searchParams.get("hideCompleted") === "true"}
+              onChange={() => {
+                if (searchParams.get("hideCompleted") === "true") {
+                  params.delete("hideCompleted");
+                } else {
+                  params.set("hideCompleted", "true");
+                }
+                replace(`${pathname}?${params.toString()}`);
+              }}
             />
-            <span>Hide completed</span>
+            <span>Hide completed items</span>
           </label>
         </div>
 

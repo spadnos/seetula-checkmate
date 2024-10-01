@@ -37,7 +37,11 @@ export async function createUser() {
   });
 }
 
-export async function fetchChecklists() {
+export async function fetchChecklists(
+  options: { includeItems?: boolean; includeCategories?: boolean } = {}
+) {
+  const includeItems = options?.includeItems || true;
+  const includeCategories = options?.includeCategories || true;
   const session = await auth();
 
   if (!session || !session.user || !session.user.email) {
@@ -53,7 +57,7 @@ export async function fetchChecklists() {
         },
       },
     },
-    include: { items: true, categories: true },
+    include: { items: includeItems, categories: includeCategories },
   });
   // console.log(records);
   return records;
