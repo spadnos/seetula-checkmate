@@ -2,8 +2,21 @@ import { fetchChecklist, fetchChecklists } from "@/lib/checklist";
 import { title } from "@/components/primitives";
 import ListGrid from "./list-grid";
 import NavDropdown from "@/components/checklist/nav-dropdown";
-import ListView from "@/components/checklist/list-view";
+import ItemGroup from "@/components/checklist/item-group";
 import SideNav from "@/components/sidenav";
+import { ItemType } from "@/lib/types";
+
+function sortItemsByCategory(items: ItemType[]) {
+  const groups: { [key: string]: ItemType[] } = {};
+  items.forEach((item) => {
+    const category = item.category?.title || "uncategorized";
+    if (!groups[category]) {
+      groups[category] = [];
+    }
+    groups[category].push(item);
+  });
+  return groups;
+}
 
 async function ChecklistPage({
   params,
@@ -19,6 +32,7 @@ async function ChecklistPage({
     includeItems: false,
   });
   const { view = "grid", hideCompleted = false } = searchParams;
+  const groupItems: string = "category";
 
   // console.log("checklists: ", JSON.stringify(checklists, null, 2));
   if (!checklist) {
@@ -28,6 +42,13 @@ async function ChecklistPage({
         <NavDropdown checklists={checklists} />
       </div>
     );
+  }
+
+  let groups: { [key: string]: ItemType[] } = {
+    "all items": checklist.items,
+  };
+  if (view === "grid") {
+    groups = sortItemsByCategory(checklist.items);
   }
 
   return (
@@ -40,10 +61,19 @@ async function ChecklistPage({
       <div className="flex gap-4">
         <SideNav checklists={checklists} />
 
-        {view === "list" && (
-          <ListView hideCompleted={hideCompleted} checklist={checklist} />
-        )}
-        {view === "grid" && <ListGrid checklist={checklist} />}
+        <div className=" gap-4 grid grid-cols-3">
+          {Object.keys(groups).map((group) => (
+            <ItemGroup
+              key={group}
+              items={groups[group]}
+              title={group}
+              hideCompleted={hideCompleted}
+              checklistId={checklist.id}
+            />
+          ))}
+        </div>
+
+        {view === "oldgrid" && <ListGrid checklist={checklist} />}
       </div>
     </div>
   );

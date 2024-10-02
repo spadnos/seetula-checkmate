@@ -7,6 +7,7 @@ export interface ItemType {
   quantity: number;
   completed: boolean;
   private: boolean;
+  category?: CategoryType;
 }
 
 export interface CategoryType {

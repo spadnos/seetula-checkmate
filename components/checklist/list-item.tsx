@@ -9,20 +9,18 @@ import { useState } from "react";
 import { Pencil } from "lucide-react";
 import { Trash } from "lucide-react";
 import { MessageCircle as Message } from "lucide-react";
-import { Id, ItemType } from "@/lib/types";
+import { ItemType } from "@/lib/types";
 import { DragHandleDots2Icon as DragIcon } from "@radix-ui/react-icons";
-import { deleteItem } from "@/lib/checklist";
+import {
+  deleteItem,
+  toggleItemComplete,
+  updateListItem,
+} from "@/lib/checklist";
 
-export default function ListItem({
-  item,
-  toggleCompleted,
-  handleUpdateItem,
-}: {
-  item: ItemType;
-  toggleCompleted: (id: Id) => void;
-  handleUpdateItem: (id: Id, data: object) => void;
-}) {
+export default function ListItem({ item }: { item: ItemType }) {
   const [editMode, setEditMode] = useState(false);
+  const [itemTitle, setItemTitle] = useState(item.title);
+  const [itemQuantity, setItemQuantity] = useState(item.quantity);
   const { setNodeRef, attributes, listeners, transform, transition } =
     useSortable({
       id: item.id,
@@ -41,10 +39,17 @@ export default function ListItem({
   //   handleUpdateItem(item.id, { private: !item.private });
   // }
 
+  function toggleEditMode() {
+    setEditMode((prev) => !prev);
+  }
+
   function handleSubmit(formData: FormData) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const formFields = Object.fromEntries(formData);
 
-    handleUpdateItem(item.id, formFields);
+    setItemTitle(formData.get("title")?.toString() || "");
+    setItemQuantity(Number(formData.get("quantity")?.toString() || "1"));
+    updateListItem(item.id, formFields);
 
     toggleEditMode();
   }
@@ -53,20 +58,26 @@ export default function ListItem({
     await deleteItem(item.id);
   }
 
+  async function updateCheckStatus() {
+    // console.log("updateCheckStatus");
+    // update the db
+    await toggleItemComplete(item.id);
+  }
+
   if (editMode) {
     return (
       <div
         ref={setNodeRef}
         style={style}
-        className="mx-2 border-2 my-4 px-2 border-green-600"
+        className="mx-2 w-full border-2 my-4 px-2 border-green-600"
       >
         <h2>Edit Item</h2>
         <form action={handleSubmit} className="flex flex-col gap-2">
-          <Input type="text" name="title" defaultValue={item.title} autoFocus />
+          <Input type="text" name="title" defaultValue={itemTitle} autoFocus />
           <Input
             type="number"
             name="quantity"
-            defaultValue={item.quantity.toString()}
+            defaultValue={itemQuantity.toString()}
           />
           <button type="submit" className="mt-4 border-2 p-2">
             Done
@@ -78,7 +89,7 @@ export default function ListItem({
 
   return (
     <div
-      className="flex group justify-between items-start px-2"
+      className="w-full flex justify-between group"
       style={style}
       ref={setNodeRef}
     >
@@ -90,14 +101,20 @@ export default function ListItem({
           <Checkbox
             id="completed"
             defaultChecked={item.completed}
-            onClick={() => toggleCompleted(item.id)}
+            onClick={updateCheckStatus}
           />
           <label
             htmlFor="completed"
             className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex space-x-2"
           >
-            {item.title}
-            {item.quantity > 1 && <div className="ml-2">({item.quantity})</div>}
+            <div className="">
+              <div className="capitalize">
+                <span>{item.title}</span>
+                {itemQuantity > 1 && (
+                  <span className=""> ({itemQuantity})</span>
+                )}
+              </div>
+            </div>
           </label>
         </div>
       </div>
@@ -107,12 +124,12 @@ export default function ListItem({
           <Message size={16} />
           <Pencil
             size={16}
-            className="hover:stroke-1"
+            className="hover:stroke-1 hover:cursor-pointer"
             onClick={toggleEditMode}
           />
           <Trash
             size={16}
-            className="hover:stroke-1 hover:stroke-red-500"
+            className="hover:stroke-1 hover:stroke-red-500 hover:cursor-pointer"
             onClick={handleDelete}
           />
         </div>
@@ -122,10 +139,17 @@ export default function ListItem({
           <LuUnlock onClick={togglePrivate} />
         )} */}
       </div>
+      {/* <div className="ml-8">
+        {item.category && (
+          <details className="text-sm">
+          <summary className="font-medium">Details</summary>
+          <div className="px-2">
+          <p>{item.category.title}</p>
+          <pre>{JSON.stringify(item.category, null, 2)}</pre>
+          </div>
+          </details>
+          )}
+          </div> */}
     </div>
   );
-
-  function toggleEditMode() {
-    setEditMode((prev) => !prev);
-  }
 }

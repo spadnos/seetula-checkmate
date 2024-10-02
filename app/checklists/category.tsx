@@ -24,9 +24,6 @@ export default function Category({
   category,
   items,
   addNewItem,
-  updateCheckStatus,
-  handleDeleteItem,
-  handleUpdateItem,
   handleRemoveCategory,
 }: props) {
   const { setNodeRef, attributes, listeners } = useSortable({
@@ -95,13 +92,7 @@ export default function Category({
       <div className="flex w-full flex-col mt-2 min-h-16 " ref={setNodeRef}>
         <SortableContext items={notCompleted}>
           {notCompleted.map((item: ItemType) => (
-            <ListItem
-              key={item.id}
-              item={item}
-              toggleCompleted={updateCheckStatus}
-              handleDeleteItem={handleDeleteItem}
-              handleUpdateItem={handleUpdateItem}
-            />
+            <ListItem key={item.id} item={item} />
           ))}
         </SortableContext>
       </div>
@@ -118,13 +109,7 @@ export default function Category({
           </span>
         </div>
         {completed.map((item: ItemType) => (
-          <ListItem
-            key={item.id}
-            item={item}
-            toggleCompleted={updateCheckStatus}
-            handleDeleteItem={handleDeleteItem}
-            handleUpdateItem={handleUpdateItem}
-          />
+          <ListItem key={item.id} item={item} />
         ))}
       </div>
     </div>

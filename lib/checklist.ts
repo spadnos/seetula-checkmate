@@ -102,7 +102,7 @@ export async function fetchChecklist(listId: string) {
         id: listId,
       },
       include: {
-        items: true,
+        items: { include: { category: true } },
         categories: true,
       },
     });
@@ -209,18 +209,18 @@ export async function toggleItemComplete(id: Id) {
   try {
     const item = await prisma.item.findUnique({ where: { id } });
     if (item) {
-      const record = await prisma.item.update({
+      await prisma.item.update({
         where: { id: id },
         data: {
           completed: !item.completed,
         },
       });
-      return record;
     }
   } catch (error) {
     console.log(error);
     return null;
   }
+  revalidatePath("/checklists");
 }
 
 export async function resetList(id: Id) {
@@ -236,21 +236,20 @@ export async function resetList(id: Id) {
   });
 }
 
-type addItemType = {
-  title: string;
-  checklist: { connect: { id: string } };
-  completed: boolean;
-  private: boolean;
-  category?: { connect: { id: string } };
-  user: { connect: { email: string } };
-};
+// type addItemType = {
+//   title: string;
+//   checklist: { connect: { id: string } };
+//   completed: boolean;
+//   private: boolean;
+//   category?: { connect: { id: string } };
+//   user: { connect: { email: string } };
+// };
 
 export async function addItemToChecklist(
   listId: string,
   categoryId: string,
   title: string
 ) {
-  console.log("adding item", listId, categoryId, title);
   const session = await auth();
   if (!session || !session.user?.email) {
     return;
@@ -259,12 +258,13 @@ export async function addItemToChecklist(
   // TODO: Add zod for validation
   // console.log(listId, title, category);
   // return;
-  const data: addItemType = {
+  const data: Prisma.ItemCreateInput = {
     title: title,
     user: { connect: { email: session.user?.email } },
     checklist: { connect: { id: listId } },
     completed: false,
     private: true,
+    category: { connect: undefined },
   };
   if (categoryId) {
     data.category = { connect: { id: categoryId } };
