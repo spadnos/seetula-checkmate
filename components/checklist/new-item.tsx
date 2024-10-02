@@ -2,13 +2,27 @@
 
 import { createRef } from "react";
 import { Input } from "../ui/input";
+import { CategoryType } from "@/lib/types";
+import { addItemToChecklist } from "@/lib/checklist";
 
-function NewItem() {
+type props = {
+  checklistId: string;
+  category?: CategoryType;
+};
+
+function NewItem({ checklistId, category }: props) {
   const ref = createRef<HTMLFormElement>();
 
   async function handleNewItem(formData: FormData) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const formFields = Object.fromEntries(formData);
+    const name = formData.get("name")?.toString() || "";
+
+    // Add the item to the checklist
+    try {
+      await addItemToChecklist(checklistId, category?.id || "", name);
+    } catch (error) {
+      console.log(error);
+    }
 
     // reset the form
     ref.current?.reset();

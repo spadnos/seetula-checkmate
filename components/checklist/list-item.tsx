@@ -11,16 +11,15 @@ import { Trash } from "lucide-react";
 import { MessageCircle as Message } from "lucide-react";
 import { Id, ItemType } from "@/lib/types";
 import { DragHandleDots2Icon as DragIcon } from "@radix-ui/react-icons";
+import { deleteItem } from "@/lib/checklist";
 
 export default function ListItem({
   item,
   toggleCompleted,
-  handleDeleteItem,
   handleUpdateItem,
 }: {
   item: ItemType;
   toggleCompleted: (id: Id) => void;
-  handleDeleteItem: (id: Id) => void;
   handleUpdateItem: (id: Id, data: object) => void;
 }) {
   const [editMode, setEditMode] = useState(false);
@@ -48,6 +47,10 @@ export default function ListItem({
     handleUpdateItem(item.id, formFields);
 
     toggleEditMode();
+  }
+
+  async function handleDelete() {
+    await deleteItem(item.id);
   }
 
   if (editMode) {
@@ -110,7 +113,7 @@ export default function ListItem({
           <Trash
             size={16}
             className="hover:stroke-1 hover:stroke-red-500"
-            onClick={() => handleDeleteItem(item.id)}
+            onClick={handleDelete}
           />
         </div>
         {/* {item.private ? (

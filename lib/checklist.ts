@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 import { z } from "zod";
 import { Id } from "@/lib/types";
 import { auth } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 export type ChecklistWithRelations = Prisma.ChecklistGetPayload<{
   include: { items: true; categories: true };
@@ -235,11 +236,21 @@ export async function resetList(id: Id) {
   });
 }
 
-export async function createItem(
+type addItemType = {
+  title: string;
+  checklist: { connect: { id: string } };
+  completed: boolean;
+  private: boolean;
+  category?: { connect: { id: string } };
+  user: { connect: { email: string } };
+};
+
+export async function addItemToChecklist(
   listId: string,
   categoryId: string,
   title: string
 ) {
+  console.log("adding item", listId, categoryId, title);
   const session = await auth();
   if (!session || !session.user?.email) {
     return;
@@ -248,16 +259,21 @@ export async function createItem(
   // TODO: Add zod for validation
   // console.log(listId, title, category);
   // return;
+  const data: addItemType = {
+    title: title,
+    user: { connect: { email: session.user?.email } },
+    checklist: { connect: { id: listId } },
+    completed: false,
+    private: true,
+  };
+  if (categoryId) {
+    data.category = { connect: { id: categoryId } };
+  }
   const record = prisma.item.create({
-    data: {
-      title: title,
-      user: { connect: { email: session.user?.email } },
-      checklist: { connect: { id: listId } },
-      category: { connect: { id: categoryId } },
-      completed: false,
-      private: true,
-    },
+    data,
   });
+
+  revalidatePath("/checklists");
   return record;
 }
 
@@ -269,6 +285,7 @@ export async function deleteItem(id: string) {
   } catch (error) {
     console.log(error);
   }
+  revalidatePath("/checklists");
 }
 
 export async function fetchItems() {

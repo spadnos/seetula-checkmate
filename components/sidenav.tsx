@@ -2,7 +2,6 @@
 
 import { ChecklistType } from "@/lib/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import path from "path";
 // import NavDropdown from "./checklist/nav-dropdown";
 
 const VIEWS = [
@@ -15,6 +14,7 @@ const VIEWS = [
     name: "List",
   },
 ];
+
 export default function SideNav({
   checklists,
 }: {
@@ -38,7 +38,7 @@ export default function SideNav({
               id="checklist"
               name="checklistId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={checklists[0]?.id || ""}
+              defaultValue={pathname?.split("/")[2] || ""}
               onChange={(e) => {
                 replace(`/checklists/${e.target.value}?${params.toString()}`);
               }}

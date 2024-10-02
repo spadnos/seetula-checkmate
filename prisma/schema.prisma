@@ -70,8 +70,8 @@ model Item {
   userId      String
   private     Boolean   @default(false)
   quantity    Int       @default(1)
-  category    Category  @relation(fields: [categoryId], references: [id])
-  categoryId  String
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  String?
   checklist   Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
   checklistId String
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)

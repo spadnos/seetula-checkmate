@@ -1,7 +1,12 @@
 import { ItemType } from "@/lib/types";
 import ListItem from "./list-item";
 
-function ItemList({ items, heading }: { items: ItemType[]; heading: string }) {
+type props = {
+  items: ItemType[];
+  heading: string;
+};
+
+function ItemList({ items, heading }: props) {
   return (
     <div className="mt-8">
       <h2 className="text-lg font-bold">{heading}</h2>

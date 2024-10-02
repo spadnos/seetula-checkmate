@@ -1,5 +1,6 @@
 import { ChecklistType } from "@/lib/types";
 import ItemList from "./item-list";
+import NewItem from "./new-item";
 
 function ListView({
   checklist,
@@ -15,6 +16,7 @@ function ListView({
   return (
     <div>
       <ItemList heading="Incomplete" items={incompleteItems} />
+      <NewItem checklistId={checklist.id} />
       {!hideCompleted && (
         <ItemList heading="Completed" items={completedItems} />
       )}
