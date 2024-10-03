@@ -4,17 +4,23 @@ import ListGrid from "./list-grid";
 import NavDropdown from "@/components/checklist/nav-dropdown";
 import ItemGroup from "@/components/checklist/item-group";
 import SideNav from "@/components/sidenav";
-import { ItemType } from "@/lib/types";
+import { ItemType, ItemGroupType } from "@/lib/types";
 
 function sortItemsByCategory(items: ItemType[]) {
-  const groups: { [key: string]: ItemType[] } = {};
+  const groups: { [key: string]: ItemGroupType } = {};
   items.forEach((item) => {
     const category = item.category?.title || "uncategorized";
     if (!groups[category]) {
-      groups[category] = [];
+      groups[category] = {
+        title: category,
+        checklistId: item.checklistId ?? "",
+        categoryId: item.categoryId,
+        items: [],
+      };
     }
-    groups[category].push(item);
+    groups[category].items.push(item);
   });
+  // console.log("groups: ", JSON.stringify(groups, null, 2));
   return groups;
 }
 
@@ -27,28 +33,30 @@ async function ChecklistPage({
 }) {
   // TODO: This can be more efficient
   const checklist = await fetchChecklist(params.id);
-  const checklists = await fetchChecklists({
-    includeCategories: false,
-    includeItems: false,
-  });
   const { view = "grid", hideCompleted = false } = searchParams;
   const groupItems: string = "category";
 
   // console.log("checklists: ", JSON.stringify(checklists, null, 2));
   if (!checklist) {
     return (
-      <div>
+      <div className="flex flex-col items-center w-96 gap-8">
         Checklist not found.
-        <NavDropdown checklists={checklists} />
+        {/* <NavDropdown checklists={checklists} /> */}
       </div>
     );
   }
 
-  let groups: { [key: string]: ItemType[] } = {
-    "all items": checklist.items,
+  let groups: { [key: string]: ItemGroupType } = {
+    "all items": {
+      checklistId: checklist.id,
+      items: checklist.items as ItemType[],
+      title: "all items",
+      categoryId: null,
+    },
   };
+
   if (view === "grid") {
-    groups = sortItemsByCategory(checklist.items);
+    groups = sortItemsByCategory(checklist.items as ItemType[]);
   }
 
   return (
@@ -59,14 +67,14 @@ async function ChecklistPage({
         <p className="mt-2">{checklist.description}</p>
       </div>
       <div className="flex gap-4">
-        <SideNav checklists={checklists} />
+        {/* <SideNav checklists={checklists} /> */}
 
-        <div className=" gap-4 grid grid-cols-3">
-          {Object.keys(groups).map((group) => (
+        <div className="w-full gap-4 grid grid-cols-3">
+          {Object.values(groups).map((group) => (
             <ItemGroup
-              key={group}
-              items={groups[group]}
-              title={group}
+              key={group.title}
+              group={group}
+              title={group.title}
               hideCompleted={hideCompleted}
               checklistId={checklist.id}
             />

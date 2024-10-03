@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Id } from "@/lib/types";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
+import { checklistSchema, validateWithZodSchema } from "@/utils/schemas";
 
 export type ChecklistWithRelations = Prisma.ChecklistGetPayload<{
   include: { items: true; categories: true };
@@ -127,6 +128,34 @@ export async function getChecklistItems(listId: string) {
   });
 
   return items;
+}
+
+export async function newList(formData: FormData) {
+  const session = await auth();
+
+  if (!session?.user || !session.user?.email) {
+    return;
+  }
+
+  const rawData = Object.fromEntries(formData);
+  try {
+    const validatedFields = validateWithZodSchema(checklistSchema, rawData);
+  } catch (error) {
+    console.log(error);
+    return;
+  }
+
+  try {
+    const checklist = await prisma.checklist.create({
+      data: {
+        ...validatedFields,
+        user: { connect: { email: session.user?.email } },
+      },
+    });
+    return checklist;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function createChecklist(data: {

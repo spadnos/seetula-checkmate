@@ -20,3 +20,8 @@ export const profileSchema = z.object({
   lastName: z.string().min(2, "last name must be at least 2 characters"),
   username: z.string().min(2, "username must be at least 2 characters"),
 });
+
+export const checklistSchema = z.object({
+  title: z.string().min(1, "Name must be at least 1 character").max(191),
+  description: z.string().optional(),
+});

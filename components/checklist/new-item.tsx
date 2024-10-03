@@ -7,10 +7,10 @@ import { addItemToChecklist } from "@/lib/checklist";
 
 type props = {
   checklistId: string;
-  category?: CategoryType;
+  categoryId?: string | null;
 };
 
-function NewItem({ checklistId, category }: props) {
+function NewItem({ checklistId, categoryId }: props) {
   const ref = createRef<HTMLFormElement>();
 
   async function handleNewItem(formData: FormData) {
@@ -19,7 +19,7 @@ function NewItem({ checklistId, category }: props) {
 
     // Add the item to the checklist
     try {
-      await addItemToChecklist(checklistId, category?.id || "", name);
+      await addItemToChecklist(checklistId, categoryId || "", name);
     } catch (error) {
       console.log(error);
     }

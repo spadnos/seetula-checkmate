@@ -2,6 +2,9 @@
 
 import { ChecklistType } from "@/lib/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import NavDropdown from "./checklist/nav-dropdown";
+import Link from "next/link";
+import { Button } from "./ui/button";
 // import NavDropdown from "./checklist/nav-dropdown";
 
 const VIEWS = [
@@ -27,8 +30,11 @@ export default function SideNav({
 
   return (
     <div className="w-64 flex h-full flex-col px-3 py-4 md:px-2">
+      <Link href="/checklists/new-list">
+        <Button className="mb-4">Create a new list</Button>
+      </Link>
       <div className="flex grow flex-row justify-between md:flex-col">
-        {/* <NavDropdown checklists={[]} /> */}
+        <NavDropdown checklists={[]} />
         <div className="mb-4">
           <label htmlFor="view" className="mb-2 block text-sm font-medium">
             Select Checklist

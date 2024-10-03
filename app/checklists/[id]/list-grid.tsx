@@ -6,7 +6,7 @@ import {
   ChecklistWithRelations,
   toggleItemComplete,
   updateListItem,
-  createItem,
+  addItemToChecklist,
   deleteItem,
   addCategoryToChecklist,
   removeCategoryFromChecklist,
@@ -136,7 +136,11 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
     // console.log("adding new item", categoryId, itemName);
 
     if (!categoryId) return;
-    const newItem = await createItem(checklist.id, categoryId, itemName);
+    const newItem = await addItemToChecklist(
+      checklist.id,
+      categoryId,
+      itemName
+    );
 
     if (!newItem) {
       return;

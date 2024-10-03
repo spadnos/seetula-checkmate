@@ -8,6 +8,8 @@ export interface ItemType {
   completed: boolean;
   private: boolean;
   category?: CategoryType;
+  checklist?: ChecklistType;
+  checklistId?: Id;
 }
 
 export interface CategoryType {
@@ -21,5 +23,12 @@ export interface ChecklistType {
   title: string;
   description: string | null;
   user?: object;
+  items: ItemType[];
+}
+
+export interface ItemGroupType {
+  title: string;
+  checklistId: Id;
+  categoryId: Id | null;
   items: ItemType[];
 }
