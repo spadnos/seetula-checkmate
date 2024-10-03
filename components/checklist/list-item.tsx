@@ -16,6 +16,8 @@ import {
   toggleItemComplete,
   updateListItem,
 } from "@/lib/checklist";
+import { Button } from "../ui/button";
+import ItemEdit from "./item-edit";
 
 export default function ListItem({ item }: { item: ItemType }) {
   const [editMode, setEditMode] = useState(false);
@@ -65,26 +67,7 @@ export default function ListItem({ item }: { item: ItemType }) {
   }
 
   if (editMode) {
-    return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        className="mx-2 w-full border-2 my-4 px-2 border-green-600"
-      >
-        <h2>Edit Item</h2>
-        <form action={handleSubmit} className="flex flex-col gap-2">
-          <Input type="text" name="title" defaultValue={itemTitle} autoFocus />
-          <Input
-            type="number"
-            name="quantity"
-            defaultValue={itemQuantity.toString()}
-          />
-          <button type="submit" className="mt-4 border-2 p-2">
-            Done
-          </button>
-        </form>
-      </div>
-    );
+    return <ItemEdit item={item} toggleEditMode={toggleEditMode} />;
   }
 
   return (
