@@ -1,33 +1,51 @@
-"use client";
-
-import { ChecklistType } from "@/app/checklists/list-card";
-import React, { useState } from "react";
+import { ChecklistType } from "@/lib/types";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const NavDropdown = ({ checklists }: { checklists: ChecklistType[] }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+  const { replace } = useRouter();
+
+  // const checkslists = await fetchChecklists();
+  if (!checklists) {
+    return null;
+  }
 
   return (
     <div className="relative inline-block text-left">
-      <div>
+      <div className="mb-4">
+        <label htmlFor="view" className="mb-2 block text-sm font-medium">
+          Select Checklist
+        </label>
+        <div className="relative">
+          <select
+            id="checklist"
+            name="checklistId"
+            className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
+            defaultValue={pathname?.split("/")[2] || ""}
+            onChange={(e) => {
+              replace(`/checklists/${e.target.value}?${params.toString()}`);
+            }}
+          >
+            <option value="" disabled>
+              Select a checklist
+            </option>
+            {checklists.map((checklist) => (
+              <option key={checklist.id} value={checklist.id}>
+                {checklist.title}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      {/* <div>
         <button
           type="button"
           className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           onClick={() => setIsOpen(!isOpen)}
         >
           Select Checklist
-          <svg
-            className="-mr-1 ml-2 h-5 w-5"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fillRule="evenodd"
-              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
         </button>
       </div>
 
@@ -51,7 +69,7 @@ const NavDropdown = ({ checklists }: { checklists: ChecklistType[] }) => {
             ))}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

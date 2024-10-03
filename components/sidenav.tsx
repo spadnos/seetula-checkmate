@@ -34,32 +34,8 @@ export default function SideNav({
         <Button className="mb-4">Create a new list</Button>
       </Link>
       <div className="flex grow flex-row justify-between md:flex-col">
-        <NavDropdown checklists={[]} />
-        <div className="mb-4">
-          <label htmlFor="view" className="mb-2 block text-sm font-medium">
-            Select Checklist
-          </label>
-          <div className="relative">
-            <select
-              id="checklist"
-              name="checklistId"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={pathname?.split("/")[2] || ""}
-              onChange={(e) => {
-                replace(`/checklists/${e.target.value}?${params.toString()}`);
-              }}
-            >
-              <option value="" disabled>
-                Select a checklist
-              </option>
-              {checklists.map((checklist) => (
-                <option key={checklist.id} value={checklist.id}>
-                  {checklist.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        <NavDropdown checklists={checklists} />
+
         <div className="mb-4">
           <label htmlFor="view" className="mb-2 block text-sm font-medium">
             Select View
