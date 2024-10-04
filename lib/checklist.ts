@@ -138,8 +138,9 @@ export async function newList(formData: FormData) {
   }
 
   const rawData = Object.fromEntries(formData);
+  let validatedFields = {};
   try {
-    const validatedFields = validateWithZodSchema(checklistSchema, rawData);
+    validatedFields = validateWithZodSchema(checklistSchema, rawData);
   } catch (error) {
     console.log(error);
     return;
@@ -211,26 +212,52 @@ export async function deleteList(id: string | undefined) {
 const itemSchema = z.object({
   title: z.string().min(1, "Name must be at least 1 character").max(191),
   quantity: z.coerce.number().optional(),
+  private: z.coerce.boolean().optional(),
+  completed: z.coerce.boolean().optional(),
 });
 
-export async function updateListItem(id: Id, data: object) {
+export async function updateListItem(
+  id: Id,
+  data: {
+    title?: string;
+    quantity?: number;
+    private?: boolean;
+    completed?: boolean;
+    category?: string;
+  }
+) {
   const validatedData = itemSchema.safeParse(data);
   if (!validatedData.success) {
-    // console.log("oops", data);
     return { success: false, message: validatedData.error?.errors[0].message };
   }
+  console.log("update item", data);
+  console.log(validatedData);
+  const newData: {
+    title: string;
+    quantity?: number;
+    private?: boolean;
+    completed?: boolean;
+    category?: { connect: { id: string } };
+  } = { ...validatedData.data };
 
-  // console.log("update item", data);
+  if (data.category) {
+    // eslint-disable-next-line
+    newData.category = { connect: { id: data.category } };
+  }
+  if (!validatedData.success) {
+    console.log("oops", data);
+  }
+
   try {
     const record = await prisma.item.update({
       where: { id },
-      data: validatedData.data,
+      data: newData,
     });
-    return { success: true, data: record };
   } catch (error) {
     console.log(error);
-    return { success: false, message: error };
   }
+
+  revalidatePath("/checklists");
 }
 
 export async function toggleItemComplete(id: Id) {

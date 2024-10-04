@@ -1,10 +1,8 @@
-import { fetchChecklist, fetchChecklists } from "@/lib/checklist";
+import { fetchChecklist } from "@/lib/checklist";
 import { title } from "@/components/primitives";
 import ListGrid from "./list-grid";
-import NavDropdown from "@/components/checklist/nav-dropdown";
 import ItemGroup from "@/components/checklist/item-group";
-import SideNav from "@/components/sidenav";
-import { ItemType, ItemGroupType } from "@/lib/types";
+import { ItemType, ItemGroupType, ChecklistType } from "@/lib/types";
 
 function sortItemsByCategory(items: ItemType[]) {
   const groups: { [key: string]: ItemGroupType } = {};
@@ -34,7 +32,6 @@ async function ChecklistPage({
   // TODO: This can be more efficient
   const checklist = await fetchChecklist(params.id);
   const { view = "grid", hideCompleted = false } = searchParams;
-  const groupItems: string = "category";
 
   // console.log("checklists: ", JSON.stringify(checklists, null, 2));
   if (!checklist) {
@@ -59,6 +56,8 @@ async function ChecklistPage({
     groups = sortItemsByCategory(checklist.items as ItemType[]);
   }
 
+  // console.log("categories: ", JSON.stringify(checklist.categories, null, 2));
+
   return (
     <div className="w-full py-12 px-4 md:px-8 bg-gradient-to-b from-blue-100 to-blue-50 dark:from-gray-800 dark:to-gray-900">
       <div className="flex gap-4">
@@ -76,7 +75,7 @@ async function ChecklistPage({
               group={group}
               title={group.title}
               hideCompleted={hideCompleted}
-              checklistId={checklist.id}
+              checklist={checklist as ChecklistType}
             />
           ))}
         </div>

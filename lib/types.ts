@@ -24,6 +24,7 @@ export interface ChecklistType {
   description: string | null;
   user?: object;
   items: ItemType[];
+  categories: CategoryType[];
 }
 
 export interface ItemGroupType {

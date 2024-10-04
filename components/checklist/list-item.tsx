@@ -2,27 +2,23 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 
 import { Pencil } from "lucide-react";
 import { Trash } from "lucide-react";
 import { MessageCircle as Message } from "lucide-react";
-import { ItemType } from "@/lib/types";
+import { CategoryType, ItemType } from "@/lib/types";
 import { DragHandleDots2Icon as DragIcon } from "@radix-ui/react-icons";
-import {
-  deleteItem,
-  toggleItemComplete,
-  updateListItem,
-} from "@/lib/checklist";
-import { Button } from "../ui/button";
+import { deleteItem, toggleItemComplete } from "@/lib/checklist";
 import ItemEdit from "./item-edit";
 
-export default function ListItem({ item }: { item: ItemType }) {
+type props = { item: ItemType; categories: CategoryType[] };
+
+export default function ListItem({ item, categories }: props) {
   const [editMode, setEditMode] = useState(false);
-  const [itemTitle, setItemTitle] = useState(item.title);
-  const [itemQuantity, setItemQuantity] = useState(item.quantity);
+  // const [itemTitle, setItemTitle] = useState(item.title);
+  // const [itemQuantity, setItemQuantity] = useState(item.quantity);
   const { setNodeRef, attributes, listeners, transform, transition } =
     useSortable({
       id: item.id,
@@ -45,16 +41,16 @@ export default function ListItem({ item }: { item: ItemType }) {
     setEditMode((prev) => !prev);
   }
 
-  function handleSubmit(formData: FormData) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const formFields = Object.fromEntries(formData);
+  // function handleSubmit(formData: FormData) {
+  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   const formFields = Object.fromEntries(formData);
 
-    setItemTitle(formData.get("title")?.toString() || "");
-    setItemQuantity(Number(formData.get("quantity")?.toString() || "1"));
-    updateListItem(item.id, formFields);
+  //   // setItemTitle(formData.get("title")?.toString() || "");
+  //   // setItemQuantity(Number(formData.get("quantity")?.toString() || "1"));
+  //   updateListItem(item.id, formFields);
 
-    toggleEditMode();
-  }
+  //   toggleEditMode();
+  // }
 
   async function handleDelete() {
     await deleteItem(item.id);
@@ -67,7 +63,13 @@ export default function ListItem({ item }: { item: ItemType }) {
   }
 
   if (editMode) {
-    return <ItemEdit item={item} toggleEditMode={toggleEditMode} />;
+    return (
+      <ItemEdit
+        item={item}
+        categories={categories}
+        toggleEditMode={toggleEditMode}
+      />
+    );
   }
 
   return (
@@ -93,8 +95,8 @@ export default function ListItem({ item }: { item: ItemType }) {
             <div className="">
               <div className="capitalize">
                 <span>{item.title}</span>
-                {itemQuantity > 1 && (
-                  <span className=""> ({itemQuantity})</span>
+                {item.quantity > 1 && (
+                  <span className=""> ({item.quantity})</span>
                 )}
               </div>
             </div>

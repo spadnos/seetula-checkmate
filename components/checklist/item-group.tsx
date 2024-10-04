@@ -1,21 +1,17 @@
-import { ItemGroupType, ItemType } from "@/lib/types";
+import { ChecklistType, ItemGroupType } from "@/lib/types";
 import ItemList from "./item-list";
 import NewItem from "./new-item";
 
-function ItemGroup({
-  checklistId,
-  group,
-  title,
-  hideCompleted,
-}: {
-  checklistId: string;
+type props = {
+  checklist: ChecklistType;
   group: ItemGroupType;
   title?: string;
   hideCompleted: boolean;
-}) {
+};
+function ItemGroup({ checklist, group, title, hideCompleted }: props) {
   const items = group.items;
   if (!items) {
-    console.log("group", group);
+    // console.log("group", group);
     return null;
   }
   const completedItems = items.filter((item) => item.completed);
@@ -29,10 +25,18 @@ function ItemGroup({
       >
         {title && <h2 className="text-lg font-bold">{title}</h2>}
       </div>
-      <ItemList heading="Incomplete" items={incompleteItems} />
-      <NewItem checklistId={checklistId} categoryId={group.categoryId} />
+      <ItemList
+        heading="Incomplete"
+        items={incompleteItems}
+        categories={checklist.categories}
+      />
+      <NewItem checklistId={checklist.id} categoryId={group.categoryId} />
       {!hideCompleted && (
-        <ItemList heading="Completed" items={completedItems} />
+        <ItemList
+          heading="Completed"
+          items={completedItems}
+          categories={checklist.categories}
+        />
       )}
     </div>
   );

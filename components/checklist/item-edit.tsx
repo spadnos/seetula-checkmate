@@ -1,61 +1,42 @@
-import { ItemType } from "@/lib/types";
+import { CategoryType, ItemType } from "@/lib/types";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Check, ChevronsUpDown } from "lucide-react";
+// import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+// import { cn } from "@/lib/utils";
+// import {
+//   Command,
+//   CommandEmpty,
+//   CommandGroup,
+//   CommandInput,
+//   CommandItem,
+//   CommandList,
+// } from "@/components/ui/command";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover";
 
 import { updateListItem } from "@/lib/checklist";
-import { useState } from "react";
+// import { useState } from "react";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 
-const categories = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-
-function ItemEdit({
-  item,
-  toggleEditMode,
-}: {
+type props = {
   item: ItemType;
   toggleEditMode: () => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  categories: CategoryType[];
+};
+function ItemEdit({ item, toggleEditMode, categories }: props) {
+  // const [open, setOpen] = useState(false);
+  // const [value, setValue] = useState(item.categoryId);
   async function handleSubmit(formData: FormData) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const formFields = Object.fromEntries(formData);
+    // checkboxes don't show up in the formData if not checked
+    formFields.private = formFields.private ? "true" : "";
+    // console.log(formFields);
 
     await updateListItem(item.id, formFields);
     toggleEditMode();
@@ -71,7 +52,23 @@ function ItemEdit({
           name="quantity"
           defaultValue={item.quantity.toString()}
         />
-        <Popover open={open} onOpenChange={setOpen}>
+
+        <Label htmlFor="private">Private</Label>
+        <Checkbox name="private" defaultChecked={item.private} />
+
+        <select
+          name="category"
+          defaultValue={item.categoryId ?? ""}
+          className="w-full border-2 px-2 py-1 rounded-md"
+        >
+          <option value="">No Category</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.title}
+            </option>
+          ))}
+        </select>
+        {/* <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
@@ -80,21 +77,21 @@ function ItemEdit({
               className="w-[200px] justify-between"
             >
               {value
-                ? categories.find((category) => category.value === value)?.label
+                ? categories.find((category) => category.id === value)?.title
                 : "Select category..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[200px] p-0">
-            <Command>
+            <Command name="category">
               <CommandInput placeholder="Search category..." />
               <CommandList>
                 <CommandEmpty>No category found.</CommandEmpty>
                 <CommandGroup>
                   {categories.map((category) => (
                     <CommandItem
-                      key={category.value}
-                      value={category.value}
+                      key={category.id}
+                      value={category.id}
                       onSelect={(currentValue) => {
                         setValue(currentValue === value ? "" : currentValue);
                         setOpen(false);
@@ -103,17 +100,17 @@ function ItemEdit({
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          value === category.value ? "opacity-100" : "opacity-0"
+                          value === category.id ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      {category.label}
+                      {category.title}
                     </CommandItem>
                   ))}
                 </CommandGroup>
               </CommandList>
             </Command>
           </PopoverContent>
-        </Popover>
+        </Popover> */}
         <div className="flex justify-between">
           <Button className="mt-4 border-2 p-2" onClick={toggleEditMode}>
             Cancel
