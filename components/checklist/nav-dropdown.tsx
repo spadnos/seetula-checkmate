@@ -1,6 +1,6 @@
 "use client";
 
-import { ChecklistType } from "@/app/checklists/list-card";
+import { ChecklistType } from "@/lib/types";
 import React, { useState } from "react";
 
 const NavDropdown = ({ checklists }: { checklists: ChecklistType[] }) => {

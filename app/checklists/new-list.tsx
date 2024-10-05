@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ReactNode, useState } from "react";
 import { createListAction, updateListAction } from "@/utils/actions";
-import { ChecklistType } from "./list-card";
+import { ChecklistType } from "@/lib/types";
 
 export default function NewList({
   list,
