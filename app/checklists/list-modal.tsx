@@ -7,7 +7,7 @@ import { createListAction, updateListAction } from "@/utils/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ChecklistType } from "./list-card";
+import { ChecklistType } from "@/lib/types";
 
 export default function ListModal({
   list,

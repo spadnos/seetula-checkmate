@@ -5,11 +5,10 @@ import { CSS } from "@dnd-kit/utilities";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 
-import { Pencil } from "lucide-react";
+import { GripVertical, Pencil } from "lucide-react";
 import { Trash } from "lucide-react";
 import { MessageCircle as Message } from "lucide-react";
 import { CategoryType, ItemType } from "@/lib/types";
-import { DragHandleDots2Icon as DragIcon } from "@radix-ui/react-icons";
 import { deleteItem, toggleItemComplete } from "@/lib/checklist";
 import ItemEdit from "./item-edit";
 
@@ -80,7 +79,7 @@ export default function ListItem({ item, categories }: props) {
     >
       <div className="flex items-start">
         <button {...attributes} {...listeners} className="">
-          <DragIcon />
+          <GripVertical />
         </button>
         <div className="mx-2 flex items-start space-x-2 mb-1">
           <Checkbox

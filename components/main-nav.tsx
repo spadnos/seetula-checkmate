@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { cn } from "@/lib/utils";
 import CustomLink from "./custom-link";
@@ -14,7 +14,7 @@ import {
 import React from "react";
 import { Button } from "./ui/button";
 import Logo from "./seetula/logo";
-import { useSession } from "next-auth/react";
+import { auth } from "@/auth";
 
 const NAVLINKS = [
   {
@@ -43,7 +43,7 @@ const NAVLINKS = [
   },
 ];
 
-function MenuItem({
+async function MenuItem({
   label,
   href,
   requiresAuth,
@@ -54,9 +54,9 @@ function MenuItem({
   requiresAuth: boolean;
   hidden: boolean;
 }) {
-  const session = useSession();
+  const session = await auth();
 
-  if (hidden || (requiresAuth && !session.data)) {
+  if (hidden || (requiresAuth && !session?.user)) {
     return null;
   }
 
