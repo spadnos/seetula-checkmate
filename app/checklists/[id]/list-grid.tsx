@@ -158,7 +158,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
 
   async function handleUpdateItem(id: Id, data: object) {
     const result = await updateListItem(id, data);
-    if (result.success) {
+    if (result?.success) {
       const newItems = items.map((item) => {
         if (item.id === id && result.data) {
           return result.data;

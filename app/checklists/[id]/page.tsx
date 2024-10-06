@@ -1,9 +1,8 @@
-import { fetchChecklist, resetList } from "@/lib/checklist";
+import { fetchChecklist } from "@/lib/checklist";
 import { title } from "@/components/primitives";
 import ListGrid from "./list-grid";
 import ItemGroup from "@/components/checklist/item-group";
 import { ItemType, ItemGroupType, ChecklistType } from "@/lib/types";
-import { Button } from "@/components/ui/button";
 import ResetListButton from "@/components/checklist/reset-list-button";
 
 function sortItemsByCategory(items: ItemType[]) {

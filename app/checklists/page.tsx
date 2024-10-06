@@ -1,6 +1,9 @@
 import { fetchChecklists } from "@/lib/checklist";
 import NewList from "./new-list";
 import ListCard from "./list-card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
 export default async function ChecklistsPage() {
   const checklists = await fetchChecklists();
@@ -14,7 +17,13 @@ export default async function ChecklistsPage() {
           </h1>
           <p>{checklists.length} lists</p>
         </div>
-        <NewList></NewList>
+        {/* <NewList></NewList> */}
+        <Link href="/checklists/new-list">
+          <Button>
+            <Plus />
+            New List
+          </Button>
+        </Link>
       </div>
       {checklists.length < 1 && (
         <div className="my-4">

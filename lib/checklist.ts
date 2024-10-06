@@ -161,7 +161,7 @@ export async function newList(formData: FormData) {
 
 export async function createChecklist(data: {
   title: string;
-  description: string;
+  description: string | undefined;
   private: boolean;
 }) {
   const session = await auth();
