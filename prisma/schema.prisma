@@ -61,6 +61,7 @@ model Checklist {
   categories    Category[]
   user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   items         Item[]
+  private       Boolean    @default(false)
 }
 
 model Item {

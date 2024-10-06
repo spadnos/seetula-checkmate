@@ -14,7 +14,11 @@ import {
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z, ZodError } from "zod";
-import { profileSchema, validateWithZodSchema } from "./schemas";
+import {
+  profileSchema,
+  validateWithZodSchema,
+  checklistSchema,
+} from "./schemas";
 
 export const createProfileAction = async (
   prevState: unknown,
@@ -76,11 +80,6 @@ export const updateProfileAction = async (
   }
 };
 
-const createListSchema = z.object({
-  name: z.string().min(1, "Name must be at least 1 character").max(191),
-  description: z.string().optional(),
-});
-
 export async function updateListAction(
   listId: string | undefined,
   formData: FormData
@@ -104,20 +103,48 @@ export async function updateListAction(
   return { success: true, message: "List updated" };
 }
 
+export const transformZodErrors = (error: z.ZodError) => {
+  return error.issues.map((issue) => ({
+    path: issue.path.join("."),
+    message: issue.message,
+  }));
+};
+
 export async function createListAction(formData: FormData) {
   // fake delay for testing
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  const formFields = Object.fromEntries(formData);
-  // update
-  await createChecklist({
-    title: formFields.name.toString(),
-    description: formFields.description.toString(),
-  });
-  // console.log(result);
+    const formFields = Object.fromEntries(formData);
+    // set the formfields of private to a boolean
+    const data = { ...formFields, private: formFields.private === "true" };
+    const validatedFields = checklistSchema.parse(data);
+    // update
+    await createChecklist(validatedFields);
+    // console.log(result);
 
-  revalidatePath("/checklists");
-  return { success: true, message: "List updated" };
+    revalidatePath("/checklists");
+
+    return {
+      errors: null,
+      data: "data received and mutated",
+    };
+  } catch (error) {
+    console.log(error);
+    if (error instanceof z.ZodError) {
+      return {
+        errors: transformZodErrors(error),
+        data: null,
+      };
+    }
+
+    return {
+      errors: {
+        message: "An unexpected error occurred. Could not create shelf.",
+      },
+      data: null,
+    };
+  }
 }
 
 // TODO: Refactor Polls stuff into it's own file
