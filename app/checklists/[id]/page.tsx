@@ -1,8 +1,10 @@
-import { fetchChecklist } from "@/lib/checklist";
+import { fetchChecklist, resetList } from "@/lib/checklist";
 import { title } from "@/components/primitives";
 import ListGrid from "./list-grid";
 import ItemGroup from "@/components/checklist/item-group";
 import { ItemType, ItemGroupType, ChecklistType } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import ResetListButton from "@/components/checklist/reset-list-button";
 
 function sortItemsByCategory(items: ItemType[]) {
   const groups: { [key: string]: ItemGroupType } = {};
@@ -64,6 +66,7 @@ async function ChecklistPage({
         <h1 className={title() + " capitalize mb-4"}>{checklist.title}</h1>
 
         <p className="mt-2">{checklist.description}</p>
+        <ResetListButton checklistId={checklist.id} />
       </div>
       <div className="flex gap-4">
         {/* <SideNav checklists={checklists} /> */}

@@ -290,6 +290,8 @@ export async function resetList(id: Id) {
       completed: false,
     },
   });
+
+  revalidatePath("/checklists");
 }
 
 // type addItemType = {

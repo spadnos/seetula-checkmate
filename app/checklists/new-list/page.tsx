@@ -5,37 +5,45 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChecklistType } from "@/lib/types";
-import { checklistSchema } from "@/utils/schemas";
-import { useForm } from "react-hook-form";
+import { ChecklistSchema, checklistSchema } from "@/utils/schemas";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { createListAction } from "@/utils/actions";
 
 function NewListPage({ list }: { list?: ChecklistType }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(checklistSchema) });
+  } = useForm<ChecklistSchema>({ resolver: zodResolver(checklistSchema) });
 
-  async function onSubmit1(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    // "use server";
-    console.log("Creating new list", e.target);
-    // revalidatePath("/checklists");
-    // redirect("/checklists");
-  }
+  // async function onSubmit1(e: React.FormEvent<HTMLFormElement>) {
+  //   e.preventDefault();
+  //   // "use server";
+  //   console.log("Creating new list", e.target);
+  //   // revalidatePath("/checklists");
+  //   // redirect("/checklists");
+  // }
 
-  async function onSubmit(data: any) {
+  const onSubmitForm: SubmitHandler<ChecklistSchema> = async (data) => {
     console.log(data);
-  }
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description || "");
+    formData.append("private", data.private ? "true" : "false");
+
+    // call the server action
+    await createListAction(formData);
+  };
 
   return (
     <div className="flex flex-col w-full items-center">
       <PageTitle title="New List" />
       <form
         className="w-full md:w-1/2 flex flex-col space-y-4"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmitForm)}
       >
         <div className="">
           <Label htmlFor="name" className="text-right">
@@ -71,7 +79,7 @@ function NewListPage({ list }: { list?: ChecklistType }) {
 
           <Checkbox id="private" />
         </div>
-        <div className="">
+        {/* <div className="">
           <Label htmlFor="template" className="text-right">
             Template
           </Label>
@@ -85,7 +93,7 @@ function NewListPage({ list }: { list?: ChecklistType }) {
               {errors.template?.message?.toString() || ""}
             </span>
           )}
-        </div>
+        </div> */}
         <Button type="submit">Save changes</Button>
       </form>
     </div>
