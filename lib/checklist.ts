@@ -51,18 +51,23 @@ export async function fetchChecklists(
   }
   // console.log(session);
 
-  const records = await prisma.checklist.findMany({
-    where: {
-      user: {
-        is: {
-          email: session.user.email,
+  try {
+    const records = await prisma.checklist.findMany({
+      where: {
+        user: {
+          is: {
+            email: session.user.email,
+          },
         },
       },
-    },
-    include: { items: includeItems, categories: includeCategories },
-  });
-  // console.log(records);
-  return records;
+      include: { items: includeItems, categories: includeCategories },
+    });
+    // console.log(records);
+    return records;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 }
 
 export async function getCategories(listId: string) {
