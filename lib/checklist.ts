@@ -138,7 +138,7 @@ export async function newList(formData: FormData) {
   }
 
   const rawData = Object.fromEntries(formData);
-  let validatedFields = {};
+  let validatedFields;
   try {
     validatedFields = validateWithZodSchema(checklistSchema, rawData);
   } catch (error) {
@@ -228,7 +228,11 @@ export async function updateListItem(
 ) {
   const validatedData = itemSchema.safeParse(data);
   if (!validatedData.success) {
-    return { success: false, message: validatedData.error?.errors[0].message };
+    return {
+      success: false,
+      data: null,
+      message: validatedData.error?.errors[0].message,
+    };
   }
   console.log("update item", data);
   console.log(validatedData);
@@ -249,10 +253,11 @@ export async function updateListItem(
   }
 
   try {
-    const record = await prisma.item.update({
+    const item = await prisma.item.update({
       where: { id },
       data: newData,
     });
+    return { success: true, data: item };
   } catch (error) {
     console.log(error);
   }

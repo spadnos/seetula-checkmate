@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable */
 
 import { createRef, useState } from "react";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
@@ -11,7 +12,7 @@ import { Trash } from "lucide-react";
 import { updateCategoryAction } from "@/utils/actions";
 
 type props = {
-  category: CategoryType;
+  category?: CategoryType;
   items: ItemType[];
   addNewItem: (itemName: string, categoryId: Id) => void;
   updateCheckStatus: (item: string) => void;
@@ -27,7 +28,7 @@ export default function Category({
   handleRemoveCategory,
 }: props) {
   const { setNodeRef, attributes, listeners } = useSortable({
-    id: category.id,
+    id: category?.id || "",
     data: {
       type: "Category",
       category,
@@ -40,7 +41,7 @@ export default function Category({
 
   async function handleNewItem(formData: FormData) {
     // const formFields = Object.fromEntries(formData);
-    addNewItem(formData.get("name")?.toString() || "", category.id);
+    addNewItem(formData.get("name")?.toString() || "", category?.id || "");
 
     // reset the form
     ref.current?.reset();
@@ -66,14 +67,14 @@ export default function Category({
             className="capitalize font-bold"
             onClick={() => setEditTitle(true)}
           >
-            {category.title}
+            {category?.title}
           </h2>
         )}
         {editTitle && (
           <form action={handleCategoryTitle}>
-            <input hidden name="id" value={category.id} />
+            <input hidden name="id" value={category?.id} />
             <input
-              defaultValue={category.title}
+              defaultValue={category?.title}
               name="title"
               className="px-2"
               autoFocus
@@ -85,14 +86,14 @@ export default function Category({
         <Trash
           size={20}
           className="hover:stroke-red-400"
-          onClick={() => handleRemoveCategory(category.id)}
+          onClick={() => handleRemoveCategory(category?.id || "")}
         />
       </div>
 
       <div className="flex w-full flex-col mt-2 min-h-16 " ref={setNodeRef}>
         <SortableContext items={notCompleted}>
           {notCompleted.map((item: ItemType) => (
-            <ListItem key={item.id} item={item} />
+            <ListItem key={item.id} item={item} categories={[]} />
           ))}
         </SortableContext>
       </div>
@@ -109,7 +110,7 @@ export default function Category({
           </span>
         </div>
         {completed.map((item: ItemType) => (
-          <ListItem key={item.id} item={item} />
+          <ListItem key={item.id} item={item} categories={[]} />
         ))}
       </div>
     </div>

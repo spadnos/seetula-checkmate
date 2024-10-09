@@ -2,7 +2,6 @@
 
 import { createRef } from "react";
 import { Input } from "../ui/input";
-import { CategoryType } from "@/lib/types";
 import { addItemToChecklist } from "@/lib/checklist";
 
 type props = {

@@ -23,5 +23,5 @@ export const profileSchema = z.object({
 
 export const checklistSchema = z.object({
   title: z.string().min(1, "Name must be at least 1 character").max(191),
-  description: z.string().optional(),
+  description: z.string().optional().default(""),
 });

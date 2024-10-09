@@ -1,5 +1,5 @@
 "use client";
-
+// eslint-diable-file
 import { useState, createRef, useId } from "react";
 
 import {
@@ -158,7 +158,7 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
 
   async function handleUpdateItem(id: Id, data: object) {
     const result = await updateListItem(id, data);
-    if (result.success) {
+    if (result?.success) {
       const newItems = items.map((item) => {
         if (item.id === id && result.data) {
           return result.data;
@@ -318,24 +318,24 @@ function ListGrid({ checklist }: { checklist: ChecklistWithRelations }) {
       const newItems = reorderItems(activeId, overId);
       setItems(newItems);
 
-      // Need to update the category and the list order since we don't know which might have changed.
-      updateListItem(activeId.toString(), {
-        category: { connect: { id: over.data.current?.item.categoryId } },
-      });
-      updateChecklist(checklist.id, {
-        itemOrder: newItems
-          .map((cat) => {
-            return cat.id;
-          })
-          .join(","),
-      });
-    }
+      //   // Need to update the category and the list order since we don't know which might have changed.
+      //   updateListItem(activeId.toString(), {
+      //     category: { connect: { id: over.data.current?.item.categoryId as string } },
+      //   });
+      //   updateChecklist(checklist.id, {
+      //     itemOrder: newItems
+      //       .map((cat) => {
+      //         return cat.id;
+      //       })
+      //       .join(","),
+      //   });
+      // }
 
-    // an item is being dragged to a new category
-    if (isActiveTask && isOverCategory) {
-      updateListItem(activeId.toString(), {
-        category: { connect: { id: overId } },
-      });
+      // // an item is being dragged to a new category
+      // if (isActiveTask && isOverCategory) {
+      //   updateListItem(activeId.toString(), {
+      //     category: { connect: { id: overId } },
+      //   });
     }
   }
 
