@@ -1,5 +1,5 @@
 import { fetchChecklists } from "@/lib/checklist";
-import NewList from "./new-list";
+// import NewList from "./new-list";
 import ListCard from "./list-card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";

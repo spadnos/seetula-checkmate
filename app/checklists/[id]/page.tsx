@@ -1,6 +1,6 @@
 import { fetchChecklist } from "@/lib/checklist";
 import { title } from "@/components/primitives";
-import ListGrid from "./list-grid";
+// import ListGrid from "./list-grid";
 import ItemGroup from "@/components/checklist/item-group";
 import { ItemType, ItemGroupType, ChecklistType } from "@/lib/types";
 import ResetListButton from "@/components/checklist/reset-list-button";
@@ -82,7 +82,7 @@ async function ChecklistPage({
           ))}
         </div>
 
-        {view === "oldgrid" && <ListGrid checklist={checklist} />}
+        {/* {view === "oldgrid" && <ListGrid checklist={checklist} />} */}
       </div>
     </div>
   );

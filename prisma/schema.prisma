@@ -58,23 +58,23 @@ model Checklist {
   userId        String
   categoryOrder String     @default("")
   itemOrder     String     @default("")
+  private       Boolean    @default(false)
   categories    Category[]
   user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   items         Item[]
-  private       Boolean    @default(false)
 }
 
 model Item {
   id          String    @id @default(cuid())
   title       String
+  categoryId  String?
   completed   Boolean
+  checklistId String
   userId      String
   private     Boolean   @default(false)
   quantity    Int       @default(1)
   category    Category? @relation(fields: [categoryId], references: [id])
-  categoryId  String?
   checklist   Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
-  checklistId String
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

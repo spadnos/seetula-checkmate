@@ -1,36 +1,39 @@
 "use client";
 
 import PageTitle from "@/components/page-title";
-import { ChecklistType } from "@/lib/types";
-import { ChecklistSchema, checklistSchema } from "@/utils/schemas";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+// import { ChecklistType } from "@/lib/types";
+import { checklistSchema } from "@/utils/schemas";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import NewListForm from "@/components/checklist/new-list-form";
 
-function NewListPage({ list }: { list?: ChecklistType }) {
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors, isSubmitting },
-  // } = useForm<ChecklistSchema>({ resolver: zodResolver(checklistSchema) });
+interface FormData {
+  title: string;
+  description: string;
+  private: string;
+  template: string;
+}
 
-  // function onSubmit1(e: React.FormEvent<HTMLFormElement>) {
-  //   e.preventDefault();
-  //   // "use server";
-  //   console.log("Creating new list", e.target);
-  //   // revalidatePath("/checklists");
-  //   // redirect("/checklists");
+export default function NewListPage() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: zodResolver(checklistSchema) });
+
+  const onSubmit: SubmitHandler<FormData> = (data: FormData) => {
+    // "use server";
+    console.log("onSubmit", data);
+    // revalidatePath("/checklists");
+    // redirect("/checklists");
+  };
+
+  //  function onSubmit(data: FormEvent<HTMLFormElement>) {
+  //   console.log("onSubmit", data);
   // }
-
-  // const onSubmitForm: SubmitHandler<ChecklistSchema> = async (data) => {
-  //   console.log("data", data);
-  //   const formData = new FormData();
-  //   formData.append("title", data.title);
-  //   formData.append("description", data.description || "");
-  //   formData.append("private", data.private ? "true" : "false");
-
-  //   // call the server action
-  //   await createListAction(formData);
-  // };
 
   return (
     <div className="flex flex-col w-full items-center">
@@ -58,7 +61,7 @@ function NewListPage({ list }: { list?: ChecklistType }) {
           </Label>
           <Textarea
             {...register("description")}
-            defaultValue={list?.description || ""}
+            defaultValue={""}
             className="w-full"
           />
           {errors.description && (
@@ -75,7 +78,9 @@ function NewListPage({ list }: { list?: ChecklistType }) {
           <Checkbox {...register("private")} />
         </div> */}
 
-      {/* <div className="">
+          <Checkbox {...register("private")} defaultChecked={false} />
+        </div>
+        <div className="">
           <Label htmlFor="template" className="text-right">
             Template
           </Label>
@@ -97,4 +102,3 @@ function NewListPage({ list }: { list?: ChecklistType }) {
     </div>
   );
 }
-export default NewListPage;
