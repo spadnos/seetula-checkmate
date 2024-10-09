@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { checklistSchema } from "@/utils/schemas";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import NewListForm from "@/components/checklist/new-list-form";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface FormData {
   title: string;
@@ -38,23 +39,21 @@ export default function NewListPage() {
   return (
     <div className="flex flex-col w-full items-center">
       <PageTitle title="New List" />
-      <NewListForm />
-      {/* <form
+      <form
         className="w-full md:w-1/2 flex flex-col space-y-4"
-        onSubmit={handleSubmit(onSubmitForm)}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <div className="">
           <Label htmlFor="name" className="text-right">
             List Name
           </Label>
-          <Input {...register("title")} className="w-full" />
+          <Input id="name" {...register("title")} className="w-full" />
           {errors.title && (
             <span className="text-red-500">
               {errors.title?.message?.toString() || ""}
             </span>
           )}
         </div>
-
         <div className="">
           <Label htmlFor="description" className="text-right">
             Description
@@ -70,13 +69,10 @@ export default function NewListPage() {
             </span>
           )}
         </div>
-
         <div className="flex items-center gap-2">
           <Label htmlFor="private" className="text-right">
             Private
           </Label>
-          <Checkbox {...register("private")} />
-        </div> */}
 
           <Checkbox {...register("private")} defaultChecked={false} />
         </div>
@@ -94,11 +90,9 @@ export default function NewListPage() {
               {errors.template?.message?.toString() || ""}
             </span>
           )}
-        </div> */}
-      {/* <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Creating..." : "Submit"}
-        </Button>
-      </form> */}
+        </div>
+        <Button type="submit">Save changes</Button>
+      </form>
     </div>
   );
 }
