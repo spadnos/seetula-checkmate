@@ -13,7 +13,6 @@ import {
   transformZodErrors,
   validateWithZodSchema,
 } from "@/utils/schemas";
-import { redirect } from "next/navigation";
 
 export type ChecklistWithRelations = Prisma.ChecklistGetPayload<{
   include: { items: true; categories: true };

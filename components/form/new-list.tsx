@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createListAction } from "@/lib/checklist";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/router";
 
 function NewList() {
   const {
