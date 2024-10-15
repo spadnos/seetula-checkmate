@@ -12,7 +12,6 @@ import {
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
 import React from "react";
-import { Button } from "./ui/button";
 import Logo from "./seetula/logo";
 import { auth } from "@/auth";
 
