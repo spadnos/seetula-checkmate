@@ -13,8 +13,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ReactNode, useState } from "react";
-import { createListAction, updateListAction } from "@/utils/actions";
 import { ChecklistType } from "@/lib/types";
+import { checklistSchema, ChecklistSchemaType } from "@/utils/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 export default function NewList({
   list,
@@ -24,19 +26,14 @@ export default function NewList({
   children?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const { register, handleSubmit } = useForm<ChecklistSchemaType>({
+    resolver: zodResolver(checklistSchema),
+  });
 
-  async function onSubmit(formData: FormData) {
-    let result = { success: true, message: "" };
-    if (list) {
-      result = await updateListAction(list.id, formData);
-    } else {
-      result = await createListAction(formData);
-    }
-    if (result.success) {
-      setOpen(false);
-    }
-
-    return result;
+  async function onSubmit(data: ChecklistSchemaType) {
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description || "");
   }
 
   const variant = list ? "ghost" : "default";
@@ -55,14 +52,13 @@ export default function NewList({
             Create a new list. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <form className="grid gap-4 py-4" action={onSubmit}>
+        <form className="grid gap-4 py-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
               List Name
             </Label>
             <input
-              id="name"
-              name="name"
+              {...register}
               defaultValue={list?.title || "List name"}
               className="col-span-3"
             />
@@ -72,8 +68,7 @@ export default function NewList({
               Description
             </Label>
             <Input
-              id="description"
-              name="description"
+              {...register("description")}
               defaultValue={list?.description || ""}
               className="col-span-3"
             />

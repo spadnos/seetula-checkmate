@@ -101,7 +101,7 @@ export async function updateListAction(
   });
 
   revalidatePath("/checklists");
-  return { success: true, message: "List updated" };
+  return { success: true };
 }
 
 export async function createListAction(formData: FormData) {
