@@ -14,8 +14,8 @@ export default async function LandingPage() {
   const session = await auth();
 
   return (
-    <>
-      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-blue-100 to-blue-50 dark:from-gray-800 dark:to-gray-900">
+    <div className=" mx-auto flex flex-col items-center min-h-screen bg-[#F5F5F0]">
+      <section className="w-full py-12 md:py-16 lg:py-16 xl:py-24 bg-[#718474] text-white">
         <div className=" px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <Logo size="xl" />
@@ -23,7 +23,7 @@ export default async function LandingPage() {
               <h2 className="text-2xl font-bold tracking-tighter sm:text-2xl md:text-2xl lg:text-3xl/none">
                 The Ultimate Checklist
               </h2>
-              <p className="mx-auto max-w-[700px] text-gray-600 md:text-xl dark:text-gray-300">
+              <p className="mx-auto max-w-[700px] text-gray-300 md:text-xl">
                 Boost your productivity, organize your tasks, keep track of all
                 your lists effortlessly.
               </p>
@@ -36,7 +36,7 @@ export default async function LandingPage() {
           </div>
         </div>
       </section>
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-gray-800">
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-[#F5F5F0]">
         <div className=" px-4 md:px-6">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8 text-blue-600 dark:text-blue-400">
             Features
@@ -111,6 +111,6 @@ export default async function LandingPage() {
           </div>
         )}
       </section>
-    </>
+    </div>
   );
 }

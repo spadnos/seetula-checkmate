@@ -101,7 +101,7 @@ export async function updateListAction(
   });
 
   revalidatePath("/checklists");
-  return { success: true, message: "List updated" };
+  return { success: true };
 }
 
 export const transformZodErrors = (error: z.ZodError) => {

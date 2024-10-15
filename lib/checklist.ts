@@ -8,7 +8,11 @@ import { z } from "zod";
 import { Id } from "@/lib/types";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
-import { checklistSchema, validateWithZodSchema } from "@/utils/schemas";
+import {
+  checklistSchema,
+  transformZodErrors,
+  validateWithZodSchema,
+} from "@/utils/schemas";
 
 export type ChecklistWithRelations = Prisma.ChecklistGetPayload<{
   include: { items: true; categories: true };
@@ -135,20 +139,29 @@ export async function getChecklistItems(listId: string) {
   return items;
 }
 
-export async function newList(formData: FormData) {
+export async function createListAction(formData: FormData) {
   const session = await auth();
 
   if (!session?.user || !session.user?.email) {
-    return;
+    return { errors: ["Please login to create a list"], checklist: null };
   }
 
   const rawData = Object.fromEntries(formData);
+  const data = {
+    title: rawData.title,
+    description: rawData.description,
+    private: rawData.private === "true",
+  };
   let validatedFields;
   try {
-    validatedFields = validateWithZodSchema(checklistSchema, rawData);
+    validatedFields = validateWithZodSchema(checklistSchema, data);
+    // console.log("validatedFields", validatedFields);
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { errors: transformZodErrors(error), checklist: null };
+    }
     console.log(error);
-    return;
+    return { errors: JSON.stringify(error), checklist: null };
   }
 
   try {
@@ -158,9 +171,13 @@ export async function newList(formData: FormData) {
         user: { connect: { email: session.user?.email } },
       },
     });
-    return checklist;
+
+    revalidatePath("/checklists");
+    // redirect("/checklists");
+    return { errors: null, checklist };
   } catch (error) {
     console.log(error);
+    return { errors: JSON.stringify(error), error, checklist: null };
   }
 }
 
